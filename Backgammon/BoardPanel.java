@@ -1,11 +1,14 @@
+//Board Panel Constructor
 import javax.swing.JPanel;
 import javax.swing.JButton;
-
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-
+//Board Panel paintComponent
 import java.awt.Graphics;
 import java.awt.Color;
+
+import javax.swing.border.Border;
+import javax.swing.BorderFactory;
 
 public class BoardPanel extends JPanel
 {
@@ -15,6 +18,7 @@ public class BoardPanel extends JPanel
         super();
 
         //Set up GridBag layout
+        //Reference: https://docs.oracle.com/javase/tutorial/uiswing/layout/gridbag.html
         setLayout( new GridBagLayout() );
         GridBagConstraints constraints = new GridBagConstraints();
 
@@ -45,6 +49,16 @@ public class BoardPanel extends JPanel
         //Bottom Right to Bottom Left
         for (int count = 1; count <= 12; count++)
         {
+            //Make bar slightly smaller
+            if(count == 6)
+            {
+                constraints.weightx = 1.0;
+            }
+            else
+            {
+                constraints.weightx = 100.0;
+            }
+
             constraints.gridx = 12 - count;
             constraints.gridy = 1;
             constraints.weighty = 1.0;
@@ -54,6 +68,16 @@ public class BoardPanel extends JPanel
         //Top Left to Top Right
         for (int count = 13; count <= 24; count++)
         {
+            //Make bar slightly smaller
+            if(count == 19)
+            {
+                constraints.weightx = 1.0;
+            }
+            else
+            {
+                constraints.weightx = 100.0;
+            }
+
             constraints.gridx = count - 13;
             constraints.gridy = 0;
             constraints.weighty = 1.0;
@@ -66,6 +90,8 @@ public class BoardPanel extends JPanel
         //Call superclass's paintcomponent
         super.paintComponent(g);
         
-        // setBackground(Color.black);
+        //Create border for game board (could be in constructor)
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setBackground(Color.orange);
     }
 }

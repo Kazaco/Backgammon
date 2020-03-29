@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import javax.swing.border.Border;
+
 //Class to put the entire board together
 public class Board
 {
@@ -27,27 +29,27 @@ public class Board
     //Game-play loop
     public void play()
     {
-        System.out.println("New game begins!\n");
-        System.out.println("What color chips do you want?: 1-White, 2-Black");
+        //Initialize all Panels and Frame
+        drawGame();
 
-        System.out.println("Test Functions");
+        System.out.println("New game begins!\n");
+        infoPanel.changeText("Welcome to Backgammon!");
 
         //Empty List - length 0
         System.out.println(bkBoard[0].getCheckerNumInSlot());
         //Empty List - color 0
         System.out.println(bkBoard[0].getFirstCheckerInSlot());
-
-        drawGame();
-
     }
 
+    //Draw game for the User to See
     private void drawGame()
     {
         //Create frame for Backgammon
         frame = new JFrame("Backgammon");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setSize(800,800);
+        // frame.setResizable(false);
+        frame.setMinimumSize(new Dimension (800,600));  //Trying to make our game function correctly even if user resized screen
+
         //TOP 
         //Display whose turn it is, display if move is valid or not
         infoPanel = new InfoPanel();
@@ -62,9 +64,8 @@ public class Board
         //BOTTOM
         //Help Pop-up Panel, Roll Dice Sub-panel, whatever else
         controlPanel = new ControlPanel();
-        controlPanel.setPreferredSize(new Dimension(800,100));
+        controlPanel.setPreferredSize(new Dimension(800,150));
         frame.add(controlPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
-
 }
