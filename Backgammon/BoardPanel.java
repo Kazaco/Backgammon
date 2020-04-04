@@ -22,66 +22,102 @@ public class BoardPanel extends JPanel
         setLayout( new GridBagLayout() );
         GridBagConstraints constraints = new GridBagConstraints();
 
-        JButton buttons[] = new JButton[ 28 ];
-
-        //Numbered list of buttons
-        for ( int count = 0; count < 28; count++ )
-            buttons[ count ] = new JButton(Integer.toString(count));
+        SlotButton buttons[] = new SlotButton[ 28 ];
+        //Numbered list of buttons: each with a unique paintComponent
+        for (int count = 0; count < 28; count++)
+        {
+            //Off-Board Area, where we need 15 checkers to win
+            if(count == 0 || count == 25)
+            {
+                buttons[ count ] = new SlotButtonOffBoard(Integer.toString(count));
+            }
+            //Bottom of board Area, buttons closest to the player
+            else if( count > 0 && count <= 12 )
+            {
+                buttons[ count ] = new SlotButtonPlayerBot(Integer.toString(count));
+            }
+            //Top of board Area, buttons farthest away from the player
+            else if(count >= 13 && count < 26 )
+            {
+                buttons[ count ] = new SlotButtonPlayerTop(Integer.toString(count));
+            }
+            //Bar, middle of board where checkers captured are placed
+            else
+            {
+                buttons[ count ] = new SlotButtonBar(Integer.toString(count));
+            }
+        }
 
         ////////////////////////////////////////////////////
         //Set up off-the-board area
         // 0
         constraints.anchor = GridBagConstraints.SOUTHEAST;  // location on board to draw
         constraints.fill = GridBagConstraints.BOTH;         // resize both width/height on redraw
-        constraints.gridx = 13;                             // x,y grid location
+        constraints.gridx = 14;                             // x,y grid location
         constraints.gridy = 1;
         constraints.weightx = 1.0;                          // horizontal spacing, force into bottom right
         constraints.weighty = 2.0;                          // vertical spacing
         add(buttons[ 0 ], constraints);
 
         // 25
-        constraints.gridx = 13;
+        constraints.gridx = 14;
         constraints.gridy = 0;
         add(buttons[ 25 ], constraints);
         ////////////////////////////////////////////////////
 
-        //Set up main board
         //Bottom Right to Bottom Left
-        for (int count = 1; count <= 12; count++)
+        for (int count = 1; count <= 13; count++)
         {
-            //Make bar slightly smaller
-            if(count == 6)
-            {
-                constraints.weightx = 1.0;
-            }
-            else
-            {
-                constraints.weightx = 100.0;
-            }
-
-            constraints.gridx = 12 - count;
+            constraints.gridx = 13 - count;
             constraints.gridy = 1;
             constraints.weighty = 1.0;
-            add(buttons[ count ], constraints);
-        }
 
-        //Top Left to Top Right
-        for (int count = 13; count <= 24; count++)
-        {
-            //Make bar slightly smaller
-            if(count == 19)
-            {
-                constraints.weightx = 1.0;
-            }
-            else
+            //Board in front of user (normal size)
+            if(count < 7)
             {
                 constraints.weightx = 100.0;
+                add(buttons[ count ], constraints);
             }
+            else if (count > 7 )
+            {
+                constraints.weightx = 100.0;
+                //Offset back onto button we going to put before bar
+                add(buttons[ count - 1 ], constraints);
+            }
+            //Make bar slightly smaller and use button 26!
+            else
+            {
+                constraints.weightx = 1.0;
+                add(buttons[ 26 ], constraints);
+            }
+        }
+        ////////////////////////////////////////////////////
 
+        //Top Left to Top Right
+        for (int count = 13; count <= 25; count++)
+        {
             constraints.gridx = count - 13;
             constraints.gridy = 0;
             constraints.weighty = 1.0;
-            add(buttons[ count ], constraints);
+
+            //Board in front of opponent (normal size)
+            if(count < 19)
+            {
+                constraints.weightx = 100.0;
+                add(buttons[ count ], constraints);
+            }
+            else if(count > 19)
+            {
+                constraints.weightx = 100.0;
+                //Offset back onto button we going to put before bar
+                add(buttons[ count - 1 ], constraints);
+            }
+            //Make bar slightly smaller and use button 27!
+            else
+            {
+                constraints.weightx = 1.0;
+                add(buttons[ 27 ], constraints);
+            }
         }
     }
     
@@ -92,6 +128,6 @@ public class BoardPanel extends JPanel
         
         //Create border for game board (could be in constructor)
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setBackground(Color.orange);
+        setBackground(Color.ORANGE);
     }
 }
