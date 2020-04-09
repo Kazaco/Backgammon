@@ -9,7 +9,5 @@ public class ControlPanel extends JPanel
     {
         //Call superclass's paintcomponent
         super.paintComponent(g);
-        
-        setBackground(Color.red);
     }
 }
