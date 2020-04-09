@@ -7,6 +7,6 @@ public abstract class SlotButton extends JButton
 {
 	//Sets background color
 	public abstract void setBkgdColor(Color b);
-  //Sets triangle color (if applicable)
+  	//Sets triangle color (if applicable)
 	public abstract void setTriColor(Color t);
 }
