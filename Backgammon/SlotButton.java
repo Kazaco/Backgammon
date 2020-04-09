@@ -1,8 +1,8 @@
-//SlotButton Panel Constructor
+//SlotButton
 import javax.swing.JButton;
 import java.awt.Color;
 //Abstract class so we can have many buttons
-//in an array but with many different appearances
+//in an array but with many different appearances 
 public abstract class SlotButton extends JButton
 {
 	//Sets background color
