@@ -34,12 +34,22 @@ public class BoardPanel extends JPanel
             //Bottom of board Area, buttons closest to the player
             else if( count > 0 && count <= 12 )
             {
-                buttons[ count ] = new SlotButtonPlayerBot(Integer.toString(count));
+				buttons[ count ] = new SlotButtonPlayerBot(Integer.toString(count));
+				// Alternating colors
+				if( count % 2 == 0 )
+				{
+					buttons[ count ].setTriColor(new Color(120,47,64));
+				}
             }
             //Top of board Area, buttons farthest away from the player
             else if(count >= 13 && count < 26 )
             {
-                buttons[ count ] = new SlotButtonPlayerTop(Integer.toString(count));
+				buttons[ count ] = new SlotButtonPlayerTop(Integer.toString(count));
+				// Alternating colors
+				if( count % 2 == 0 )
+				{
+					buttons[ count ].setTriColor(new Color(120,47,64));
+				}
             }
             //Bar, middle of board where checkers captured are placed
             else
@@ -128,6 +138,6 @@ public class BoardPanel extends JPanel
         
         //Create border for game board (could be in constructor)
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setBackground(Color.ORANGE);
+        setBackground(new Color(85,60,42));
     }
 }
