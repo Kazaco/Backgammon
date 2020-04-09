@@ -12,20 +12,20 @@ public class SlotButtonOffBoard extends SlotButton
     {
         //Call Parent Constructor
         super();
-		background = new Color(32,32,32);
+	background = new Color(32,32,32);
     }
 
-	public void setBkgdColor(Color b)
-	{
-		background = b;
-		repaint();
-	}
+    public void setBkgdColor(Color b)
+    {
+	background = b;
+	repaint();
+    }
 	
-	//No definition needed
-	public void setTriColor(Color t)
-	{
+    //No definition needed
+    public void setTriColor(Color t)
+    {
 		
-	}
+    }
 
     public void paintComponent(Graphics g)
     {
