@@ -9,11 +9,11 @@ public class SlotButtonBar extends SlotButton
 	private Color background;
     
 	public SlotButtonBar(String text)
-    {
-        //Call Parent Constructor
-        super();
+    	{
+        	//Call Parent Constructor
+        	super();
 		background = new Color(85,60,42);
-    }
+    	}
 	
 	public void setBkgdColor(Color b)
 	{
@@ -27,12 +27,12 @@ public class SlotButtonBar extends SlotButton
 		
 	}
 
-    public void paintComponent(Graphics g)
-    {
-        //Call superclass's paintcomponent
-        super.paintComponent(g);
+    	public void paintComponent(Graphics g)
+    	{
+        	//Call superclass's paintcomponent
+        	super.paintComponent(g);
 
-        //Make bar the same color as the border
-        setBackground(background);
-    }
+        	//Make bar the same color as the border
+        	setBackground(background);
+    	}
 }
