@@ -2,7 +2,6 @@
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 //InfoPanel paintComponent
 import java.awt.Graphics;
 import java.awt.Color;

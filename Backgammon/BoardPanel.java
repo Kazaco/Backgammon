@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 //Board Panel paintComponent
 import java.awt.Graphics;
 import java.awt.Color;
-
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
 
@@ -65,7 +64,7 @@ public class BoardPanel extends JPanel
         constraints.fill = GridBagConstraints.BOTH;         // resize both width/height on redraw
         constraints.gridx = 14;                             // x,y grid location
         constraints.gridy = 1;
-        constraints.weightx = 1.0;                          // horizontal spacing, force into bottom right
+        constraints.weightx = 10.0;                          // horizontal spacing, force into bottom right
         constraints.weighty = 2.0;                          // vertical spacing
         add(buttons[ 0 ], constraints);
 
@@ -97,7 +96,7 @@ public class BoardPanel extends JPanel
             //Make bar slightly smaller and use button 26!
             else
             {
-                constraints.weightx = 1.0;
+                constraints.weightx = 50.0;
                 add(buttons[ 26 ], constraints);
             }
         }
@@ -125,7 +124,7 @@ public class BoardPanel extends JPanel
             //Make bar slightly smaller and use button 27!
             else
             {
-                constraints.weightx = 1.0;
+                constraints.weightx = 50.0;
                 add(buttons[ 27 ], constraints);
             }
         }

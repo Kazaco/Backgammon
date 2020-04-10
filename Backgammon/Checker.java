@@ -1,7 +1,7 @@
 //Class for each individual checker 
 public class Checker
 {
-    int color;  //0 = empty, 1 = white, 2 = black
+    int color;  //0 = empty, 1 = white, 2 = blue
 
     //Create a checker location
     public Checker()
