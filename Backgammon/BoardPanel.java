@@ -11,6 +11,8 @@ import javax.swing.BorderFactory;
 
 public class BoardPanel extends JPanel
 {
+    private SlotButton [] buttons;
+
     public BoardPanel()
     {
         //Call parent's constructor
@@ -21,7 +23,7 @@ public class BoardPanel extends JPanel
         setLayout( new GridBagLayout() );
         GridBagConstraints constraints = new GridBagConstraints();
 
-        SlotButton buttons[] = new SlotButton[ 28 ];
+        buttons = new SlotButton[ 28 ];
         //Numbered list of buttons: each with a unique paintComponent
         for (int count = 0; count < 28; count++)
         {
@@ -138,5 +140,11 @@ public class BoardPanel extends JPanel
         //Create border for game board (could be in constructor)
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(new Color(85,60,42));
+    }
+
+    public void setSlot(int numSlot, int colorCheckers, int numCheckers)
+    {
+        //Change a specific slots checker color oe number
+        buttons[numSlot].setCheckers(colorCheckers, numCheckers);
     }
 }

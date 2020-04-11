@@ -10,11 +10,7 @@ import java.awt.RenderingHints;
 
 public class SlotButtonPlayerBot extends SlotButton
 {
-    private Color background;
     private Color triangle;
-	private boolean settingCheckers = true; //Change to FALSE after testing
-	private int checkerColor = 2; //Change to ZERO after testing
-	private int numCheckers = 2; //Change to ZERO after testing
 	
     public SlotButtonPlayerBot(String text)
     {
@@ -36,34 +32,7 @@ public class SlotButtonPlayerBot extends SlotButton
 		triangle = t;
 		repaint();
     }
-	
-	public void setCheckers(int c, int n)
-	{
-		//Error checking for invalid checker colors
-		if( n != 0 || n != 1 || n != 2)
-		{
-			System.out.println("Invalid checker color.");
-			return;
-		}
 		
-		checkerColor = c;
-		numCheckers = n;
-		
-		//Reset the space
-		settingCheckers = false;
-		repaint();
-		
-		//Setting Blue or white checkers
-		if( n == 1 || n == 2 )
-		{
-			settingCheckers = true;
-			repaint();
-		}
-		//Space is cleared
-		else
-			return;
-	}
-	
     public void paintComponent(Graphics g)
     {
         //Call superclass's paintcomponent

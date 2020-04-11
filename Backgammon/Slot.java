@@ -2,27 +2,49 @@
 public class Slot
 {
     private Checker [] checkers = new Checker[15];   //Array references of checkers in each slot
+    private int numCheckers;
     
     //Create an empty slot
     public Slot()
-    {
-        // System.out.println("New Slot!");
+    {   
+        //No Checkers are inserted at beginnning, just creating slots
+        numCheckers = 0;
+
+        //Create 'blank' checkers for each slot
         for(int j = 0; j < 15; j++)
         {
             checkers[j] = new Checker();
         }
     }
 
-    public boolean insertChecker()
+    public boolean setNumCheckers(int color, int cNum)
     {
-        return true;
+        //Reset numCheckers value (if somehow changed before)
+        numCheckers = 0;
+
+        //Set number of checkers in each slot
+        if(cNum >= 0 && cNum <= 15)
+        {
+            for(int i = 0; i < cNum; i++)
+            {
+                checkers[i].setCheckerColor(color);
+                numCheckers++;
+            }
+            return true;
+        }
+        else
+        {
+            //Invalid Checker Amount
+            System.out.println("Invalid Set Checker Amount");
+            return false;
+        }
     }
 
     //Retrieve number of checkers in a slot
     public int getCheckerNumInSlot()
     {
         //Slot is not empty
-        if(getFirstCheckerInSlot() == 1 || getFirstCheckerInSlot() == 2)
+        if(getFirstCheckerColor() == 1 || getFirstCheckerColor() == 2)
         {
             int counter = 0;
             for(int i = 0; i < 15; i++)
@@ -44,7 +66,7 @@ public class Slot
     }
 
     //Retrieve color of first checker in slot
-    public int getFirstCheckerInSlot()
+    public int getFirstCheckerColor()
     {
         return checkers[0].getCheckerColor();
     }

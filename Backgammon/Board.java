@@ -30,13 +30,17 @@ public class Board
         //Initialize all Panels and Frame
         drawGame();
 
+        //Template Board (Just show where buttons are located)
+        // buttonTemplateBoard();
+
+        setUpBoard();
         System.out.println("New game begins!\n");
         infoPanel.changeText("Welcome to Backgammon!");
 
         //Empty List - length 0
         System.out.println(bkBoard[0].getCheckerNumInSlot());
         //Empty List - color 0
-        System.out.println(bkBoard[0].getFirstCheckerInSlot());
+        System.out.println(bkBoard[0].getFirstCheckerColor());
     }
 
     //Draw game for the User to See
@@ -65,5 +69,46 @@ public class Board
         controlPanel.setPreferredSize(new Dimension(800,150));
         frame.add(controlPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
+    }
+
+    //Initial board set-up
+    private void setUpBoard()
+    {
+        //Player 1
+        //Slot #, Color #, numCheckers, 
+        setUpSlotCombined(6, 1, 5);
+        setUpSlotCombined(8, 1, 3);
+        setUpSlotCombined(13, 1, 5);
+        setUpSlotCombined(24, 1, 2);
+
+        //Player 2
+        setUpSlotCombined(1, 2, 2);
+        setUpSlotCombined(12, 2, 5);
+        setUpSlotCombined(17, 2, 3);
+        setUpSlotCombined(19, 2, 5);
+    }
+
+    //Just a function to show where each array/button slot is located ()
+    private void buttonTemplateBoard()
+    {
+        for(int i = 0; i < bkBoard.length; i++)
+        {
+            boardPanel.setSlot(i, 1, i); 
+        }
+    }
+
+    //Helper function for combining GUI/Logic in one step
+    private void setUpSlotCombined(int numSlot, int color, int numCheckers)
+    {   
+        //Valid input values for a slot
+        if( bkBoard[numSlot].setNumCheckers(color,numCheckers) )    //LOGIC
+        {
+            //Draw to Screen
+            boardPanel.setSlot(numSlot, color, numCheckers);        //GUI
+        }
+        else
+        {
+            //Error
+        }
     }
 }
