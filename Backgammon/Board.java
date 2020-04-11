@@ -42,10 +42,10 @@ public class Board
         //Empty List - color 0
         System.out.println(bkBoard[1].getFirstCheckerColor());
         System.out.println(boardPanel.getSlotPressed());
-        
+
         while(true)
         {
-            if( boardPanel.getSlotPressed() > 0 )
+            if( boardPanel.getSlotPressed() >= 0 && boardPanel.getButtonPressedColor() >= 0 && boardPanel.getButtonPressedNumCheckers() >= 0)
             {
                 System.out.println("Slot:" + boardPanel.getSlotPressed() + "\nColor:" + boardPanel.getButtonPressedColor() + "\nNum Checkers:" + boardPanel.getButtonPressedNumCheckers() + "\n\n");
                 boardPanel.resetButton();

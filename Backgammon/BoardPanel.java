@@ -16,10 +16,10 @@ import java.awt.event.ActionEvent;
 public class BoardPanel extends JPanel
 {
     private SlotButton [] buttons;
-    private volatile int rSlotPressed = -1;       //Most Recent Button Pressed Info
-    private int rButtonPressedColor = -1;         // -1 - for all, if no button has been pressed / resetting button
-    private int rButtonPressedNumCheckers = -1;   //volatile - loop won't recognize a button changing due to a threading problem
-                                                  //need to make variable visible on all threads, Ref: http://tutorials.jenkov.com/java-concurrency/volatile.html
+    private volatile int rSlotPressed = -1;                 //Most Recent Button Pressed Info
+    private volatile int rButtonPressedColor = -1;         // -1 - for all, if no button has been pressed / resetting button
+    private volatile int rButtonPressedNumCheckers = -1;   //volatile - loop won't recognize a button changing due to a threading problem
+                                                            //need to make variable visible on all threads, Ref: http://tutorials.jenkov.com/java-concurrency/volatile.html
     public BoardPanel()
     {
         //Call parent's constructor
