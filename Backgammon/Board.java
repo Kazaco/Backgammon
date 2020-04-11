@@ -38,9 +38,19 @@ public class Board
         infoPanel.changeText("Welcome to Backgammon!");
 
         //Empty List - length 0
-        System.out.println(bkBoard[0].getCheckerNumInSlot());
+        System.out.println(bkBoard[1].getCheckerNumInSlot());
         //Empty List - color 0
-        System.out.println(bkBoard[0].getFirstCheckerColor());
+        System.out.println(bkBoard[1].getFirstCheckerColor());
+        System.out.println(boardPanel.getSlotPressed());
+        
+        while(true)
+        {
+            if( boardPanel.getSlotPressed() > 0 )
+            {
+                System.out.println("Slot:" + boardPanel.getSlotPressed() + "\nColor:" + boardPanel.getButtonPressedColor() + "\nNum Checkers:" + boardPanel.getButtonPressedNumCheckers() + "\n\n");
+                boardPanel.resetButton();
+            }
+        }
     }
 
     //Draw game for the User to See
@@ -88,16 +98,7 @@ public class Board
         setUpSlotCombined(19, 2, 5);
     }
 
-    //Just a function to show where each array/button slot is located ()
-    private void buttonTemplateBoard()
-    {
-        for(int i = 0; i < bkBoard.length; i++)
-        {
-            boardPanel.setSlot(i, 1, i); 
-        }
-    }
-
-    //Helper function for combining GUI/Logic in one step
+    //Helper function for combining GUI/Logic in one step for building the board
     private void setUpSlotCombined(int numSlot, int color, int numCheckers)
     {   
         //Valid input values for a slot
@@ -109,6 +110,15 @@ public class Board
         else
         {
             //Error
+        }
+    }
+
+    //Just a function to show where each array/button slot is located ()
+    private void buttonTemplateBoard()
+    {
+        for(int i = 0; i < bkBoard.length; i++)
+        {
+            boardPanel.setSlot(i, 1, i); 
         }
     }
 }

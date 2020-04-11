@@ -2,17 +2,24 @@
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.awt.GridBagConstraints;
 //Board Panel paintComponent
 import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
+//Board Panel Event Handling
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class BoardPanel extends JPanel
 {
     private SlotButton [] buttons;
-
+    private volatile int rSlotPressed = -1;       //Most Recent Button Pressed Info
+    private int rButtonPressedColor = -1;         // -1 - for all, if no button has been pressed / resetting button
+    private int rButtonPressedNumCheckers = -1;   //volatile - loop won't recognize a button changing due to a threading problem
+                                                  //need to make variable visible on all threads, Ref: http://tutorials.jenkov.com/java-concurrency/volatile.html
     public BoardPanel()
     {
         //Call parent's constructor
@@ -22,6 +29,8 @@ public class BoardPanel extends JPanel
         //Reference: https://docs.oracle.com/javase/tutorial/uiswing/layout/gridbag.html
         setLayout( new GridBagLayout() );
         GridBagConstraints constraints = new GridBagConstraints();
+        //Also set up Event Listening
+        ButtonHandler handler = new ButtonHandler();
 
         buttons = new SlotButton[ 28 ];
         //Numbered list of buttons: each with a unique paintComponent
@@ -57,6 +66,9 @@ public class BoardPanel extends JPanel
             {
                 buttons[ count ] = new SlotButtonBar(Integer.toString(count));
             }
+
+            //Add Listener to newly created button
+            buttons[ count ].addActionListener( handler );
         }
 
         ////////////////////////////////////////////////////
@@ -132,6 +144,7 @@ public class BoardPanel extends JPanel
         }
     }
     
+    //Draw border for game
     public void paintComponent(Graphics g)
     {
         //Call superclass's paintcomponent
@@ -142,9 +155,53 @@ public class BoardPanel extends JPanel
         setBackground(new Color(85,60,42));
     }
 
+    //Change a specific slots checker color/number
     public void setSlot(int numSlot, int colorCheckers, int numCheckers)
     {
-        //Change a specific slots checker color oe number
         buttons[numSlot].setCheckers(colorCheckers, numCheckers);
+    }
+
+    //Accessors: for button presses
+    public int getSlotPressed()
+    {
+        // System.out.println(rSlotPressed);
+        return rSlotPressed;
+    }
+
+    public int getButtonPressedColor()
+    {
+        return rButtonPressedColor;
+    }
+
+    public int getButtonPressedNumCheckers()
+    {
+        return rButtonPressedNumCheckers;
+    }
+
+    //Assign everything to -1 to reset the button
+    public void resetButton()
+    {
+        rSlotPressed = -1;
+        rButtonPressedColor = -1;
+        rButtonPressedNumCheckers = -1;
+    }
+
+    //Retrieve NumCheckers and CheckeColor when a button is pressed
+    private class ButtonHandler implements ActionListener
+    {
+        public void actionPerformed( ActionEvent event)
+        {
+            for(int i = 0; i < 28; i++)
+            {
+                if(event.getSource() == buttons[i])
+                {
+                    rSlotPressed = i;
+                    rButtonPressedColor = buttons[i].getCheckerColor();
+                    rButtonPressedNumCheckers = buttons[i].getNumCheckers();
+                    // System.out.println("Slot:" + rSlotPressed + "\nColor:" + rButtonPressedColor + "\nNum Checkers:" + rButtonPressedNumCheckers + "\n\n");
+                }
+
+            }
+        }
     }
 }

@@ -14,6 +14,7 @@ public abstract class SlotButton extends JButton
 	public abstract void setBkgdColor(Color b);
   	//Sets triangle color (if applicable)
 	public abstract void setTriColor(Color t);
+
 	//Sets checker attributes
 	public void setCheckers(int c, int n)
 	{
@@ -40,5 +41,16 @@ public abstract class SlotButton extends JButton
 		//Space is cleared
 		else
 			return;
+	}
+
+	//Accessors: Used for button logic
+	public int getNumCheckers()
+	{
+		return numCheckers;
+	}
+
+	public int getCheckerColor()
+	{
+		return checkerColor;
 	}
 }
