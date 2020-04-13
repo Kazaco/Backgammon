@@ -155,14 +155,6 @@ public class BoardPanel extends JPanel
         setBackground(new Color(85,60,42));
     }
 
-	public boolean gameOver()
-	{
-		if( buttons[0].getNumCheckers() == 15 || buttons[25].getNumCheckers() == 15 )
-			return true;
-		else
-			return false;
-	}
-
     //Change a specific slots checker color/number
     public void setSlot(int numSlot, int colorCheckers, int numCheckers)
     {
