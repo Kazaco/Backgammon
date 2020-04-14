@@ -44,9 +44,9 @@ public class Board
         System.out.println(boardPanel.getSlotPressed());
 
 		int count = 0;
-		int slot = 0;
+		int numSlot = 0;
 		int color = 0;
-		int number = 0;
+		int numCheckers = 0;
 		
 		//Starting to play with very basic checker movement
 		//Logic currently ignores (not limited to):
@@ -65,51 +65,49 @@ public class Board
 				if( boardPanel.getButtonPressedColor() == 2 && count == 0 && boardPanel.getSlotPressed() != 0 && boardPanel.getSlotPressed() != 25 )
 				{
 					System.out.println("Slot:" + boardPanel.getSlotPressed() + "\nColor:" + boardPanel.getButtonPressedColor() + "\nNum Checkers:" + boardPanel.getButtonPressedNumCheckers() + "\n\n");
-					slot = boardPanel.getSlotPressed();
+					numSlot = boardPanel.getSlotPressed();
 					color = boardPanel.getButtonPressedColor();
-					number = boardPanel.getButtonPressedNumCheckers();
+					numCheckers = boardPanel.getButtonPressedNumCheckers();
 					boardPanel.resetButton();
 					count++;
 				}
 				//Initial slot pressed is blue snd a second button has been pressed
 				else if( color == 2 && count == 1 )
 				{
+					int newNumSlot = boardPanel.getSlotPressed();
+					int newColor = boardPanel.getButtonPressedColor();
+					int newNumCheckers = boardPanel.getButtonPressedNumCheckers();
+					
 					//Second slot pressed is blue and moving in correct direction
-					if( boardPanel.getButtonPressedColor() == 2 && count == 1 && boardPanel.getSlotPressed() > slot && boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
+					if( newColor == 2 && count == 1 && newNumSlot > numSlot && newNumSlot != 26 && newNumSlot != 27 )
 					{
-						//LOGIC
-						bkBoard[ slot ].setNumCheckers( 0, 0);
-						bkBoard[ boardPanel.getSlotPressed() ].setNumCheckers( color, boardPanel.getButtonPressedNumCheckers() + number );
-						//GUI
-						boardPanel.setSlot( slot, 0, 0 );
-						boardPanel.setSlot( boardPanel.getSlotPressed(), color, boardPanel.getButtonPressedNumCheckers() + number );
+						//First pressed
+						updateSlotCombined( numSlot, 0, 0, 0);
+						//Second pressed
+						updateSlotCombined( newNumSlot, color, numCheckers + newNumCheckers, 0 );
+						//Reset button and count
 						boardPanel.resetButton();
 						count = 0;
 					}
 					//Second slot is white and playable
-					else if( boardPanel.getButtonPressedColor() == 1 && count == 1 && boardPanel.getButtonPressedNumCheckers() <= 1 && boardPanel.getSlotPressed() > slot
-							&& boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
+					else if( newColor == 1 && count == 1 && newNumSlot > numSlot && newNumCheckers <= 1 && newNumSlot != 26 && newNumSlot != 27 )
 					{
-						//LOGIC
-						bkBoard[ slot ].setNumCheckers( 0, 0 );
-						bkBoard[ boardPanel.getSlotPressed() ].setNumCheckers( color, number );
-						bkBoard[ 27 ].setNumCheckers( 1, 1 );
-						//GUI
-						boardPanel.setSlot( slot, 0, 0 );
-						boardPanel.setSlot( 27, 1, 1);
-						boardPanel.setSlot( boardPanel.getSlotPressed(), color, number );
+						//First pressed
+						updateSlotCombined( numSlot, 0, 0, 0);
+						//Second pressed
+						updateSlotCombined( newNumSlot, color, numCheckers, 1 );
+						//Reset button and count
 						boardPanel.resetButton();
 						count = 0;
 					}
 					//Second slot is empty and playable
-					else if( boardPanel.getButtonPressedColor() == 0 && count == 1 && boardPanel.getSlotPressed() > slot && boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
+					else if( newColor == 0 && count == 1 && newNumSlot > numSlot && newNumSlot != 26 && newNumSlot != 27 )
 					{
-						//LOGIC
-						bkBoard[ slot ].setNumCheckers( 0, 0 );
-						bkBoard[ boardPanel.getSlotPressed() ].setNumCheckers( color, number );
-						//GUI
-						boardPanel.setSlot( slot, 0, 0 );
-						boardPanel.setSlot( boardPanel.getSlotPressed(), color, number );
+						//First pressed
+						updateSlotCombined( numSlot, 0, 0, 0);
+						//Second pressed
+						updateSlotCombined( newNumSlot, color, numCheckers, 0 );
+						//Reset button and count
 						boardPanel.resetButton();
 						count = 0;
 					}
@@ -123,51 +121,50 @@ public class Board
 				else if( boardPanel.getButtonPressedColor() == 1 && count == 0 && boardPanel.getSlotPressed() != 0 && boardPanel.getSlotPressed() != 25 )
 				{
 					System.out.println("Slot:" + boardPanel.getSlotPressed() + "\nColor:" + boardPanel.getButtonPressedColor() + "\nNum Checkers:" + boardPanel.getButtonPressedNumCheckers() + "\n\n");
-					slot = boardPanel.getSlotPressed();
+					numSlot = boardPanel.getSlotPressed();
 					color = boardPanel.getButtonPressedColor();
-					number = boardPanel.getButtonPressedNumCheckers();
+					numCheckers = boardPanel.getButtonPressedNumCheckers();
 					boardPanel.resetButton();
 					count++;
 				}
 				//Initial slot pressed is white and a second button has been pressed
 				else if( color == 1 && count == 1 )
 				{
+					int newNumSlot = boardPanel.getSlotPressed();
+					int newColor = boardPanel.getButtonPressedColor();
+					int newNumCheckers = boardPanel.getButtonPressedNumCheckers();
+					
 					//Second slot pressed is white and moving in correct direction
-					if( boardPanel.getButtonPressedColor() == 1 && count == 1 && boardPanel.getSlotPressed() < slot && boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
+					if( newColor == 1 && count == 1 && newNumSlot < numSlot && newNumSlot != 26 && newNumSlot != 27 )
 					{
-						//LOGIC
-						bkBoard[ slot ].setNumCheckers( 0, 0);
-						bkBoard[ boardPanel.getSlotPressed() ].setNumCheckers( color, boardPanel.getButtonPressedNumCheckers() + number );
-						//GUI
-						boardPanel.setSlot( slot, 0, 0 );
-						boardPanel.setSlot( boardPanel.getSlotPressed(), color, boardPanel.getButtonPressedNumCheckers() + number );
+						//First pressed
+						updateSlotCombined( numSlot, 0, 0, 0);
+						//Second pressed
+						updateSlotCombined( newNumSlot, color, numCheckers + newNumCheckers, 0 );
+						//Reset button and count
 						boardPanel.resetButton();
 						count = 0;
 					}
 					//Second slot is blue and playable
-					else if( boardPanel.getButtonPressedColor() == 2 && count == 1 && boardPanel.getButtonPressedNumCheckers() <= 1 && boardPanel.getSlotPressed() < slot
-							&& boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
+					else if( newColor == 2 && count == 1 && newNumSlot < numSlot && newNumCheckers <= 1 && newNumSlot != 26 && newNumSlot != 27 )
 					{
-						//LOGIC
-						bkBoard[ slot ].setNumCheckers( 0, 0 );
-						bkBoard[ boardPanel.getSlotPressed() ].setNumCheckers( color, number );
-						bkBoard[ 26 ].setNumCheckers( 1, 1 );
-						//GUI
-						boardPanel.setSlot( slot, 0, 0 );
-						boardPanel.setSlot( 26, 2, 1);
-						boardPanel.setSlot( boardPanel.getSlotPressed(), color, number );
+						//First pressed
+						updateSlotCombined( numSlot, 0, 0, 0);
+						//Second pressed
+						updateSlotCombined( newNumSlot, color, numCheckers, 2 );
+						//Reset button and count
 						boardPanel.resetButton();
 						count = 0;
 					}
+					
 					//Second slot is empty and playable
-					else if( boardPanel.getButtonPressedColor() == 0 && count == 1 && boardPanel.getSlotPressed() < slot && boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
+					else if( newColor == 0 && count == 1 && newNumSlot < numSlot && newNumSlot != 26 && newNumSlot != 27 )
 					{
-						//LOGIC
-						bkBoard[ slot ].setNumCheckers( 0, 0 );
-						bkBoard[ boardPanel.getSlotPressed() ].setNumCheckers( color, number );
-						//GUI
-						boardPanel.setSlot( slot, 0, 0 );
-						boardPanel.setSlot( boardPanel.getSlotPressed(), color, number );
+						//First pressed
+						updateSlotCombined( numSlot, 0, 0, 0);
+						//Second pressed
+						updateSlotCombined( newNumSlot, color, numCheckers, 0 );
+						//Reset button and count
 						boardPanel.resetButton();
 						count = 0;
 					}
@@ -224,10 +221,10 @@ public class Board
         setUpSlotCombined(6, 1, 5);
         setUpSlotCombined(8, 1, 3);
         setUpSlotCombined(13, 1, 5);
-        setUpSlotCombined(24, 1, 2);
+        setUpSlotCombined(24, 1, 1);
 
         //Player 2
-        setUpSlotCombined(1, 2, 2);
+        setUpSlotCombined(1, 2, 1);
         setUpSlotCombined(12, 2, 5);
         setUpSlotCombined(17, 2, 3);
         setUpSlotCombined(19, 2, 5);
@@ -247,6 +244,34 @@ public class Board
             //Error
         }
     }
+	
+	//Updates GUI/Logic of a slot
+	private void updateSlotCombined(int numSlot, int color, int numCheckers, int colorHit)
+	{
+		//LOGIC
+		bkBoard[ numSlot ].setNumCheckers( color, numCheckers);
+		//GUI
+		boardPanel.setSlot( numSlot, color, numCheckers );
+		
+		if( colorHit == 1 )
+		{
+			int hitCheckers = bkBoard[ 27 ].getCheckerNumInSlot();
+			//LOGIC
+			bkBoard[ 27 ].setNumCheckers( 1, hitCheckers + 1 );
+			//GUI
+			boardPanel.setSlot( 27, 1, hitCheckers + 1 );
+		}
+		else if( colorHit == 2 )
+		{
+			int hitCheckers = bkBoard[ 26 ].getCheckerNumInSlot();
+			//LOGIC
+			bkBoard[ 26 ].setNumCheckers( 1, hitCheckers + 1 );
+			//GUI
+			boardPanel.setSlot( 26, 2, hitCheckers + 1 );
+		}
+		else
+			return;
+	}
 
     //Just a function to show where each array/button slot is located ()
     private void buttonTemplateBoard()
