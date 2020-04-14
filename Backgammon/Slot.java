@@ -43,31 +43,47 @@ public class Slot
     //Retrieve number of checkers in a slot
     public int getCheckerNumInSlot()
     {
-        //Slot is not empty
-        if(getFirstCheckerColor() == 1 || getFirstCheckerColor() == 2)
+        return numCheckers;
+    }
+
+    //Remove checker from a slot
+    public boolean removeChecker()
+    {
+        //Check that slot selected actually has checkers
+        if(numCheckers > 0)
         {
-            int counter = 0;
-            for(int i = 0; i < 15; i++)
-            {
-                //No more checkers to count
-                if(checkers[i].getCheckerColor() == 0)
-                {
-                    return counter;
-                }
-                counter++;
-            }
-            return counter;
+            //Change 'color' to empty
+            checkers[numCheckers - 1].setCheckerColor(0);
+            numCheckers--;
+            return true;
         }
-        //Empty
         else
         {
-            return 0;
+            //Can't remove anything!
+            System.out.println("Removed nothing!");
+            return false;
         }
     }
 
-    //Retrieve color of first checker in slot
-    public int getFirstCheckerColor()
+    //Add checker to a slot
+    public boolean addChecker(int color)
     {
-        return checkers[0].getCheckerColor();
+        checkers[numCheckers].setCheckerColor(color);
+        numCheckers++;
+        return true;
+    }
+
+    //Retrieve color of first checker in slot
+    public int getCheckerTopColor()
+    {
+        if(numCheckers > 0)
+        {
+            return checkers[numCheckers - 1].getCheckerColor();
+        }
+        else
+        {
+            //Empty slot
+            return 0;
+        }
     }
 }
