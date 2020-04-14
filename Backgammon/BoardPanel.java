@@ -178,6 +178,30 @@ public class BoardPanel extends JPanel
         return rButtonPressedNumCheckers;
     }
 
+	public boolean barWasPressed()
+	{
+		if( rSlotPressed == 26 || rSlotPressed == 27 )
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean offBoardWasPressed()
+	{
+		if( rSlotPressed == 0 || rSlotPressed == 25 )
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean boardWasPressed()
+	{
+		if( barWasPressed() == false && offBoardWasPressed() == false )
+			return true;
+		else
+			return false;
+	}
+
     //Assign everything to -1 to reset the button
     public void resetButton()
     {
