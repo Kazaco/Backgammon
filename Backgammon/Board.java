@@ -38,10 +38,10 @@ public class Board
         infoPanel.changeText("Welcome to Backgammon!");
 
         //Empty List - length 0
-        System.out.println(bkBoard[1].getCheckerNumInSlot());
+        //System.out.println(bkBoard[1].getCheckerNumInSlot());
         //Empty List - color 0
-        System.out.println(bkBoard[1].getFirstCheckerColor());
-        System.out.println(boardPanel.getSlotPressed());
+        //System.out.println(bkBoard[1].getFirstCheckerColor());
+        //System.out.println(boardPanel.getSlotPressed());
 
 		int count = 0;
 		int numSlot = 0;
@@ -221,10 +221,10 @@ public class Board
         setUpSlotCombined(6, 1, 5);
         setUpSlotCombined(8, 1, 3);
         setUpSlotCombined(13, 1, 5);
-        setUpSlotCombined(24, 1, 1);
+        setUpSlotCombined(24, 1, 2);
 
         //Player 2
-        setUpSlotCombined(1, 2, 1);
+        setUpSlotCombined(1, 2, 2);
         setUpSlotCombined(12, 2, 5);
         setUpSlotCombined(17, 2, 3);
         setUpSlotCombined(19, 2, 5);
