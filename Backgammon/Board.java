@@ -71,8 +71,8 @@ public class Board
 					boardPanel.resetButton();
 					count++;
 				}
-				//Initial slot pressed is blue
-				if( color == 2 && count == 1 )
+				//Initial slot pressed is blue snd a second button has been pressed
+				else if( color == 2 && count == 1 )
 				{
 					//Second slot pressed is blue and moving in correct direction
 					if( boardPanel.getButtonPressedColor() == 2 && count == 1 && boardPanel.getSlotPressed() > slot && boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
@@ -87,7 +87,7 @@ public class Board
 						count = 0;
 					}
 					//Second slot is white and playable
-					if( boardPanel.getButtonPressedColor() == 1 && count == 1 && boardPanel.getButtonPressedNumCheckers() <= 1 && boardPanel.getSlotPressed() > slot
+					else if( boardPanel.getButtonPressedColor() == 1 && count == 1 && boardPanel.getButtonPressedNumCheckers() <= 1 && boardPanel.getSlotPressed() > slot
 							&& boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
 					{
 						//LOGIC
@@ -102,7 +102,7 @@ public class Board
 						count = 0;
 					}
 					//Second slot is empty and playable
-					if( boardPanel.getButtonPressedColor() == 0 && count == 1 && boardPanel.getSlotPressed() > slot && boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
+					else if( boardPanel.getButtonPressedColor() == 0 && count == 1 && boardPanel.getSlotPressed() > slot && boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
 					{
 						//LOGIC
 						bkBoard[ slot ].setNumCheckers( 0, 0 );
@@ -113,9 +113,14 @@ public class Board
 						boardPanel.resetButton();
 						count = 0;
 					}
+					else
+					{
+						boardPanel.resetButton();
+						count = 0;
+					}
 				}
 				//Initial slot pressed is white
-				if( boardPanel.getButtonPressedColor() == 1 && count == 0 && boardPanel.getSlotPressed() != 0 && boardPanel.getSlotPressed() != 25 )
+				else if( boardPanel.getButtonPressedColor() == 1 && count == 0 && boardPanel.getSlotPressed() != 0 && boardPanel.getSlotPressed() != 25 )
 				{
 					System.out.println("Slot:" + boardPanel.getSlotPressed() + "\nColor:" + boardPanel.getButtonPressedColor() + "\nNum Checkers:" + boardPanel.getButtonPressedNumCheckers() + "\n\n");
 					slot = boardPanel.getSlotPressed();
@@ -124,8 +129,8 @@ public class Board
 					boardPanel.resetButton();
 					count++;
 				}
-				//Initial slot pressed is white
-				if( color == 1 && count == 1 )
+				//Initial slot pressed is white and a second button has been pressed
+				else if( color == 1 && count == 1 )
 				{
 					//Second slot pressed is white and moving in correct direction
 					if( boardPanel.getButtonPressedColor() == 1 && count == 1 && boardPanel.getSlotPressed() < slot && boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
@@ -140,7 +145,7 @@ public class Board
 						count = 0;
 					}
 					//Second slot is blue and playable
-					if( boardPanel.getButtonPressedColor() == 2 && count == 1 && boardPanel.getButtonPressedNumCheckers() <= 1 && boardPanel.getSlotPressed() < slot
+					else if( boardPanel.getButtonPressedColor() == 2 && count == 1 && boardPanel.getButtonPressedNumCheckers() <= 1 && boardPanel.getSlotPressed() < slot
 							&& boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
 					{
 						//LOGIC
@@ -155,7 +160,7 @@ public class Board
 						count = 0;
 					}
 					//Second slot is empty and playable
-					if( boardPanel.getButtonPressedColor() == 0 && count == 1 && boardPanel.getSlotPressed() < slot && boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
+					else if( boardPanel.getButtonPressedColor() == 0 && count == 1 && boardPanel.getSlotPressed() < slot && boardPanel.getSlotPressed() != 26 && boardPanel.getSlotPressed() != 27 )
 					{
 						//LOGIC
 						bkBoard[ slot ].setNumCheckers( 0, 0 );
@@ -166,6 +171,16 @@ public class Board
 						boardPanel.resetButton();
 						count = 0;
 					}
+					else
+					{
+						boardPanel.resetButton();
+						count = 0;
+					}
+				}
+				else
+				{
+					boardPanel.resetButton();
+					count = 0;
 				}
 			}
 		}
