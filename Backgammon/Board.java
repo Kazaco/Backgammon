@@ -84,8 +84,14 @@ public class Board
 					int newColor = boardPanel.getButtonPressedColor();
 					int newNumCheckers = boardPanel.getButtonPressedNumCheckers();
 					
+					//Selected same slot twice (reset selection)
+					if( numSlot == newNumSlot)
+					{
+						boardPanel.resetButton();
+						count = 0;
+					}
 					//Second slot pressed is blue and moving in correct direction
-					if( newColor == 2 && count == 1 && newNumSlot > numSlot && newNumSlot < 26 )
+					else if( newColor == 2 && count == 1 && newNumSlot > numSlot && newNumSlot < 26 )
 					{
 						//First pressed
 						updateSlotCombined( numSlot, 0, 0, 0);
@@ -130,8 +136,15 @@ public class Board
 					int newColor = boardPanel.getButtonPressedColor();
 					int newNumCheckers = boardPanel.getButtonPressedNumCheckers();
 					
+					//Selected same slot twice (reset selection)
+					if( numSlot == newNumSlot)
+					{
+						boardPanel.resetButton();
+						count = 0;
+
+					}
 					//Second slot pressed is white and moving in correct direction
-					if( newColor == 1 && count == 1 && newNumSlot < numSlot )
+					else if( newColor == 1 && count == 1 && newNumSlot < numSlot )
 					{
 						//First pressed
 						updateSlotCombined( numSlot, 0, 0, 0);
@@ -140,6 +153,18 @@ public class Board
 						//Reset button and count
 						boardPanel.resetButton();
 						count = 0;
+
+						// //Second pressed
+						// bkBoard[ newNumSlot ].addChecker( bkBoard[ numSlot ].getCheckerTopColor() );
+						// boardPanel.setSlot( newNumSlot, bkBoard[ newNumSlot ].getCheckerTopColor(), bkBoard[ newNumSlot ].getCheckerNumInSlot());
+
+						// //First pressed
+						// bkBoard[ numSlot ].removeChecker();
+						// boardPanel.setSlot(numSlot, bkBoard[ numSlot ].getCheckerTopColor(), bkBoard[ numSlot ].getCheckerNumInSlot());
+
+						// //Reset button and count
+						// boardPanel.resetButton();
+						// count = 0;
 					}
 					//Second slot is blue and playable
 					else if( newColor == 2 && count == 1 && newNumSlot < numSlot && newNumCheckers <= 1 )
@@ -151,6 +176,23 @@ public class Board
 						//Reset button and count
 						boardPanel.resetButton();
 						count = 0;
+
+						// //Recent Button Selected (Add blue checker to bar)
+						// bkBoard[26].addChecker( bkBoard[ newNumSlot ].getCheckerTopColor() );
+						// boardPanel.setSlot( 26, bkBoard[ newNumSlot ].getCheckerTopColor(), bkBoard[ 26 ].getCheckerNumInSlot() );   //Draw it
+
+						// //Recent Button (remove blue checker in newNumSlot)
+						// bkBoard[ newNumSlot ].removeChecker();
+						// boardPanel.setSlot( newNumSlot , bkBoard[ newNumSlot ].getCheckerTopColor(), bkBoard[ 26 ].getCheckerNumInSlot());
+						
+						// //Recent Button Selected (Move blue checker in its place)
+						// bkBoard[ newNumSlot ].addChecker( bkBoard[ numSlot ].getCheckerTopColor() );                                                               //Add Checker
+						// boardPanel.setSlot( newNumSlot, bkBoard[ numSlot ].getCheckerTopColor(), bkBoard[ newNumSlot ].getCheckerNumInSlot() );  
+
+						// //Oldest Button Selected (Dont need to check if first button was empty as ^^'color'^^ tells us it wasn't)
+						// //Need to use getCheckerTopColor() so '0' will be used as color
+						// bkBoard[ numSlot ].removeChecker();
+						// boardPanel.setSlot( numSlot, bkBoard[ numSlot ].getCheckerTopColor(), bkBoard[ numSlot ].getCheckerNumInSlot());
 					}
 					
 					//Second slot is empty and playable
@@ -163,6 +205,18 @@ public class Board
 						//Reset button and count
 						boardPanel.resetButton();
 						count = 0;
+
+						// //Second pressed
+						// bkBoard[ newNumSlot ].addChecker( bkBoard[ numSlot ].getCheckerTopColor() );
+						// boardPanel.setSlot( newNumSlot, bkBoard[ newNumSlot ].getCheckerTopColor(), bkBoard[ newNumSlot ].getCheckerNumInSlot());
+
+						// //First pressed
+						// bkBoard[ numSlot ].removeChecker();
+						// boardPanel.setSlot(numSlot, bkBoard[ numSlot ].getCheckerTopColor(), bkBoard[ numSlot ].getCheckerNumInSlot());
+
+						// //Reset button and count
+						// boardPanel.resetButton();
+						// count = 0;
 					}
 					else
 					{
