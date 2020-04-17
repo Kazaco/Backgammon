@@ -155,6 +155,25 @@ public class BoardPanel extends JPanel
         setBackground(new Color(85,60,42));
     }
 
+	public void highlightMoves( boolean[] moves, boolean flag )
+	{
+		for(int i = 0; i < moves.length; i++)
+		{
+			if( moves[i] == true)
+			{
+				buttons[i].setHighlight( flag );
+			}
+		}
+	}
+
+	public void noValidMoves( int numSlot, boolean flag )
+	{
+		if( numSlot >= 0 && numSlot < 28 )
+			buttons[ numSlot ].setNoValidMoves( flag );
+		else
+			return;
+	}
+
     //Change a specific slots checker color/number
     public void setSlot(int numSlot, int colorCheckers, int numCheckers)
     {

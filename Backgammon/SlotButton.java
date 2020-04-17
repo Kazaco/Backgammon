@@ -6,9 +6,10 @@ import java.awt.Color;
 public abstract class SlotButton extends JButton
 {
 	protected Color background;
-	protected boolean settingCheckers = false; //Change to FALSE after testing
-	protected int checkerColor = 0; //Change to ZERO after testing
-	protected int numCheckers = 0; //Change to ZERO after testing
+	protected boolean settingCheckers = false;
+	protected int checkerColor = 0;
+	protected int numCheckers = 0;
+	protected boolean highlightingMoves = false;
 
 	//Sets background color
 	public abstract void setBkgdColor(Color b);
@@ -41,6 +42,28 @@ public abstract class SlotButton extends JButton
 		//Space is cleared
 		else
 			return;
+	}
+
+	//Flags a SlotButton for highlighting valid moves
+	public void setHighlight(boolean flag)
+	{
+		highlightingMoves = flag;
+		setCheckers( checkerColor, numCheckers );
+	}
+	
+	//Flags a SlotButton for having no valid moves
+	public void setNoValidMoves(boolean flag)
+	{
+		if ( flag == true )
+		{
+			background = Color.RED;
+		}
+		else
+		{
+			background = new Color(32, 32, 32);
+		}
+		
+		setCheckers( checkerColor, numCheckers );
 	}
 
 	//Accessors: Used for button logic

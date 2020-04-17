@@ -78,20 +78,24 @@ public class Board
 	private void takeTurn(int p, int d1, int d2)
 	{	
 		d1Used = false; d2Used = false; d3Used = false;
-		
+
 		//Players turn continues until they've used up each dice roll
 		while( d3Used == false )
 		{	
 			//Listening until player selects a checker of their color on the board
-			while( boardPanel.getButtonPressedColor() != p )
+			while ( boardPanel.getSlotPressed() == -1 )
 			{
-				firstPressed = boardPanel.getSlotPressed();
+				while( boardPanel.getButtonPressedColor() != p )
+				{
+					firstPressed = boardPanel.getSlotPressed();
+				}
 			}
 			
 			System.out.println("firstPressed = " + firstPressed);
 			
 			//Changing the moves array (member data) based on what moves are valid
 			validMoves( p, d1, d2 );
+			boardPanel.highlightMoves( moves, true);
 			boardPanel.resetButton();
 			
 			//Valid moves exist, waiting for a secondPressed that is valid
@@ -116,6 +120,7 @@ public class Board
 				if( secondPressed == firstPressed )
 				{
 					System.out.println("Move has been canceled. Try another slot.");
+					boardPanel.highlightMoves( moves, false );
 					boardPanel.resetButton();
 					continue;
 				}
@@ -123,6 +128,7 @@ public class Board
 			else
 			//If the player has selected a slot with no valid moves, start the move over
 			{
+				noValidMoves( firstPressed );
 				System.out.println("No valid moves exist. Resetting.");
 				boardPanel.resetButton();
 				continue;
@@ -139,6 +145,7 @@ public class Board
 			bkBoard[ secondPressed ].addChecker( p );
 			boardPanel.setSlot( secondPressed, bkBoard[ secondPressed ].getCheckerTopColor(), bkBoard[ secondPressed ].getCheckerNumInSlot() );
 			
+			boardPanel.highlightMoves( moves, false );
 			boardPanel.resetButton();
 		}
 	}
@@ -197,6 +204,23 @@ public class Board
 				moves[ move3 ] = true;
 			}
 		}
+	}
+	
+	//Slot blinks red
+	private void noValidMoves(int numSlot)
+	{
+		boardPanel.noValidMoves( numSlot, true );
+		
+		try
+		{
+			Thread.sleep(250);
+		}
+		catch( InterruptedException e )
+		{
+			System.out.println("Sleep interrupted!");
+		}
+		
+		boardPanel.noValidMoves( numSlot, false );		
 	}
 	
     //Draw game for the User to See

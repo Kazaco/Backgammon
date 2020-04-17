@@ -72,5 +72,12 @@ public class SlotButtonOffBoard extends SlotButton
 				y += getHeight()/22;
 			}
 		}
+		
+		if( highlightingMoves == true )
+		{
+			g2d.setStroke( new BasicStroke(5) );
+			g2d.setColor( Color.RED );
+			g2d.drawRect( 5, 5, getWidth() - 10, getHeight() - 10 );
+		}
     }
 }
