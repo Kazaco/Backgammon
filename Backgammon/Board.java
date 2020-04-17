@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import java.util.Random;
 
 //Class to put the entire board together
 public class Board
@@ -12,8 +13,13 @@ public class Board
     private InfoPanel infoPanel;
     private BoardPanel boardPanel;
     private ControlPanel controlPanel;
+	private int firstPressed, secondPressed;
     //LOGIC
-    private Slot [] bkBoard = new Slot[28];   //Array references of Slots on the board
+    private Slot [] bkBoard = new Slot[28];		//Array references of Slots on the board
+	private boolean [] moves;					//List of valid moves updated during each turn
+	private boolean validMovesExist;			//Keeps track of the existence of valid moves each turn
+	private boolean d1Used, d2Used, d3Used;		//Keeps track of rolls used during each turn
+	private int move1, move2, move3;			//Moves specific to player updated each turn
 
     //Create an empty board
     public Board()
@@ -30,304 +36,169 @@ public class Board
         //Initialize all Panels and Frame
         drawGame();
 
-        //Template Board (Just show where buttons are located)
-        // buttonTemplateBoard();
-
         setUpBoard();
         System.out.println("New game begins!\n");
         infoPanel.changeText("Welcome to Backgammon!");
 
-        //Empty List - length 0
-        //System.out.println(bkBoard[1].getCheckerNumInSlot());
-        //Empty List - color 0
-        //System.out.println(bkBoard[1].getFirstCheckerColor());
-        //System.out.println(boardPanel.getSlotPressed());
-
-		int count = 0;
-		int numSlot = 0;
-		int color = 0;
-		int numCheckers = 0;
-		boolean boardPressed = false;
-		boolean barPressed = false;
-		
-		//Starting to play with very basic checker movement
-		//Logic currently ignores (not limited to):
-			// player turns
-			// dice rolls
-			// partial checker movement
-			// bearing off
-		//Will probably write some validTurn() functions for each color
         while( gameOver() == false )
         {	
-			//A slot has been pressed
-            if( boardPanel.getSlotPressed() >= 0 && boardPanel.getButtonPressedColor() >= 0 && boardPanel.getButtonPressedNumCheckers() >= 0 )
-            {
-				//Initial slot pressed is not empty
-				if( boardPanel.getButtonPressedColor() != 0 && count == 0 && boardPanel.offBoardWasPressed() == false )
-				{	
-					System.out.println("Slot:" + boardPanel.getSlotPressed() + "\nColor:" + boardPanel.getButtonPressedColor() + "\nNum Checkers:" + boardPanel.getButtonPressedNumCheckers() + "\n\n");
-				
-					numSlot = boardPanel.getSlotPressed();
-					color = boardPanel.getButtonPressedColor();
-					numCheckers = boardPanel.getButtonPressedNumCheckers();
-					
-					boardPressed = boardPanel.boardWasPressed();
-					barPressed = boardPanel.barWasPressed();
-					
-					boardPanel.resetButton();
-					count++;
-				}
-				//Initial slot pressed is on board & blue, snd a second button has been pressed
-				else if( color == 2 && count == 1 && boardPressed == true )
-				{
-					int newNumSlot = boardPanel.getSlotPressed();
-					int newColor = boardPanel.getButtonPressedColor();
-					int newNumCheckers = boardPanel.getButtonPressedNumCheckers();
-					
-					//Selected same slot twice (reset selection)
-					if( numSlot == newNumSlot)
-					{
-						boardPanel.resetButton();
-						count = 0;
-					}
-					//Second slot pressed is blue and moving in correct direction
-					else if( newColor == 2 && count == 1 && newNumSlot > numSlot && newNumSlot < 26 )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers + newNumCheckers, 0 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-					}
-					//Second slot is white and playable
-					else if( newColor == 1 && count == 1 && newNumSlot > numSlot && newNumSlot < 26 && newNumCheckers <= 1 )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers, 1 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-					}
-					//Second slot is empty and playable
-					else if( newColor == 0 && count == 1 && newNumSlot > numSlot && newNumSlot < 26 )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers, 0 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-					}
-					else
-					{
-						boardPanel.resetButton();
-						count = 0;
-					}
-				}
-				//Initial slot pressed is on board & white, and a second button has been pressed
-				else if( color == 1 && count == 1 && boardPressed == true )
-				{
-					int newNumSlot = boardPanel.getSlotPressed();
-					int newColor = boardPanel.getButtonPressedColor();
-					int newNumCheckers = boardPanel.getButtonPressedNumCheckers();
-					
-					//Selected same slot twice (reset selection)
-					if( numSlot == newNumSlot)
-					{
-						boardPanel.resetButton();
-						count = 0;
+			Random random = new Random();
+			int d1, d2;
+			
+			//Doubles not yet supported
+			do{
+				d1 = random.nextInt(6) + 1;
+				d2 = random.nextInt(6) + 1;
+			}while( d1 == d2 );
+			
+			System.out.println("Player 1's turn");
+			System.out.println("Dice roll 1 = " + d1);
+			System.out.println("Dice roll 2 = " + d2);
+			
+			takeTurn( 1, d1, d2 );
+			
+			//Doubles not yet supported
+			do{
+				d1 = random.nextInt(6) + 1;
+				d2 = random.nextInt(6) + 1;
+			}while( d1 == d2 );
 
-					}
-					//Second slot pressed is white and moving in correct direction
-					else if( newColor == 1 && count == 1 && newNumSlot < numSlot )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers + newNumCheckers, 0 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-
-						// //Second pressed
-						// bkBoard[ newNumSlot ].addChecker( bkBoard[ numSlot ].getCheckerTopColor() );
-						// boardPanel.setSlot( newNumSlot, bkBoard[ newNumSlot ].getCheckerTopColor(), bkBoard[ newNumSlot ].getCheckerNumInSlot());
-
-						// //First pressed
-						// bkBoard[ numSlot ].removeChecker();
-						// boardPanel.setSlot(numSlot, bkBoard[ numSlot ].getCheckerTopColor(), bkBoard[ numSlot ].getCheckerNumInSlot());
-
-						// //Reset button and count
-						// boardPanel.resetButton();
-						// count = 0;
-					}
-					//Second slot is blue and playable
-					else if( newColor == 2 && count == 1 && newNumSlot < numSlot && newNumCheckers <= 1 )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers, 2 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-
-						// //Recent Button Selected (Add blue checker to bar)
-						// bkBoard[26].addChecker( bkBoard[ newNumSlot ].getCheckerTopColor() );
-						// boardPanel.setSlot( 26, bkBoard[ newNumSlot ].getCheckerTopColor(), bkBoard[ 26 ].getCheckerNumInSlot() );   //Draw it
-
-						// //Recent Button (remove blue checker in newNumSlot)
-						// bkBoard[ newNumSlot ].removeChecker();
-						// boardPanel.setSlot( newNumSlot , bkBoard[ newNumSlot ].getCheckerTopColor(), bkBoard[ 26 ].getCheckerNumInSlot());
-						
-						// //Recent Button Selected (Move blue checker in its place)
-						// bkBoard[ newNumSlot ].addChecker( bkBoard[ numSlot ].getCheckerTopColor() );                                                               //Add Checker
-						// boardPanel.setSlot( newNumSlot, bkBoard[ numSlot ].getCheckerTopColor(), bkBoard[ newNumSlot ].getCheckerNumInSlot() );  
-
-						// //Oldest Button Selected (Dont need to check if first button was empty as ^^'color'^^ tells us it wasn't)
-						// //Need to use getCheckerTopColor() so '0' will be used as color
-						// bkBoard[ numSlot ].removeChecker();
-						// boardPanel.setSlot( numSlot, bkBoard[ numSlot ].getCheckerTopColor(), bkBoard[ numSlot ].getCheckerNumInSlot());
-					}
-					
-					//Second slot is empty and playable
-					else if( newColor == 0 && count == 1 && newNumSlot < numSlot )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers, 0 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-
-						// //Second pressed
-						// bkBoard[ newNumSlot ].addChecker( bkBoard[ numSlot ].getCheckerTopColor() );
-						// boardPanel.setSlot( newNumSlot, bkBoard[ newNumSlot ].getCheckerTopColor(), bkBoard[ newNumSlot ].getCheckerNumInSlot());
-
-						// //First pressed
-						// bkBoard[ numSlot ].removeChecker();
-						// boardPanel.setSlot(numSlot, bkBoard[ numSlot ].getCheckerTopColor(), bkBoard[ numSlot ].getCheckerNumInSlot());
-
-						// //Reset button and count
-						// boardPanel.resetButton();
-						// count = 0;
-					}
-					else
-					{
-						boardPanel.resetButton();
-						count = 0;
-					}
-				}
-				//Blue player is trying to re-enter
-				else if( color == 2 && count == 1 && barPressed == true )
-				{
-					int newNumSlot = boardPanel.getSlotPressed();
-					int newColor = boardPanel.getButtonPressedColor();
-					int newNumCheckers = boardPanel.getButtonPressedNumCheckers();
-					
-					//Second slot pressed is blue and moving in correct direction
-					if( newColor == 2 && count == 1 && newNumSlot > 0 && newNumSlot < 26 )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers + newNumCheckers, 0 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-					}
-					//Second slot is white and playable
-					else if( newColor == 1 && count == 1 && newNumSlot > 0 && newNumSlot < 26 && newNumCheckers <= 1 )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers, 1 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-					}
-					//Second slot is empty and playable
-					else if( newColor == 0 && count == 1 && newNumSlot > 0 && newNumSlot < 26 )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers, 0 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-					}
-					else
-					{
-						boardPanel.resetButton();
-						count = 0;
-					}
-				}
-				//White player is trying to re-enter
-				else if( color == 1 && count == 1 && barPressed == true )
-				{
-					int newNumSlot = boardPanel.getSlotPressed();
-					int newColor = boardPanel.getButtonPressedColor();
-					int newNumCheckers = boardPanel.getButtonPressedNumCheckers();
-					
-					//Second slot pressed is white and moving in correct direction
-					if( newColor == 1 && count == 1 && newNumSlot < 25 )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers + newNumCheckers, 0 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-					}
-					//Second slot is blue and playable
-					else if( newColor == 2 && count == 1 && newNumSlot < 25 && newNumCheckers <= 1 )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers, 2 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-					}
-					
-					//Second slot is empty and playable
-					else if( newColor == 0 && count == 1 && newNumSlot < 25 )
-					{
-						//First pressed
-						updateSlotCombined( numSlot, 0, 0, 0);
-						//Second pressed
-						updateSlotCombined( newNumSlot, color, numCheckers, 0 );
-						//Reset button and count
-						boardPanel.resetButton();
-						count = 0;
-					}
-					else
-					{
-						boardPanel.resetButton();
-						count = 0;
-					}
-				}
-				else
-				{
-					boardPanel.resetButton();
-					count = 0;
-				}
-			}
+			System.out.println("Player 2's turn");
+			System.out.println("Dice roll 1 = " + d1);
+			System.out.println("Dice roll 2 = " + d2);
+			
+			takeTurn( 2, d1, d2 );
 		}
 		
 		System.out.println("Game over!");
     }
 
+	//For now, the color doesn't matter because of how primitive checker movement is
+	//Hopefully can write this function generically enough where using "p" inplace of 1 or 2 will eliminate a lot of redundant code
+	private void takeTurn(int p, int d1, int d2)
+	{	
+		d1Used = false; d2Used = false; d3Used = false;
+		
+		//Players turn continues until they've used up each dice roll
+		while( d3Used == false )
+		{	
+			//Listening until player selects a checker of their color on the board
+			while( boardPanel.getButtonPressedColor() != p )
+			{
+				firstPressed = boardPanel.getSlotPressed();
+			}
+			
+			System.out.println("firstPressed = " + firstPressed);
+			
+			//Changing the moves array (member data) based on what moves are valid
+			validMoves( p, d1, d2 );
+			boardPanel.resetButton();
+			
+			//Valid moves exist, waiting for a secondPressed that is valid
+			//NOTE: player can select their firstPressed to cancel their move if they don't like their options
+			if( validMovesExist )
+			{	
+				do
+				{
+					//Listening until a slot is selected
+					//NOTE: some extra code was needed here due to rPresseds being -1 and out of bounds of moves[]
+					while( ( secondPressed = boardPanel.getSlotPressed() ) < 0 );
+
+					//Player wants to cancel their current move
+					if( secondPressed == firstPressed )
+						break;
+					
+				} while( moves[ secondPressed ] != true ); //Listening until a valid slot is selected
+				
+				System.out.println("secondPressed = " + secondPressed);
+				
+				//If player has canceled their move, start the move over
+				if( secondPressed == firstPressed )
+				{
+					System.out.println("Move has been canceled. Try another slot.");
+					boardPanel.resetButton();
+					continue;
+				}
+			}
+			else
+			//If the player has selected a slot with no valid moves, start the move over
+			{
+				System.out.println("No valid moves exist. Resetting.");
+				boardPanel.resetButton();
+				continue;
+			}
+			
+			//Function keeps track of how many dice have been used
+			diceUsed( p, d1, d2 );
+			
+			//Updating the first slot
+			bkBoard[ firstPressed ].removeChecker();
+			boardPanel.setSlot( firstPressed, bkBoard[ firstPressed ].getCheckerTopColor(), bkBoard[ firstPressed ].getCheckerNumInSlot() );
+			
+			//Updating the second slot
+			bkBoard[ secondPressed ].addChecker( p );
+			boardPanel.setSlot( secondPressed, bkBoard[ secondPressed ].getCheckerTopColor(), bkBoard[ secondPressed ].getCheckerNumInSlot() );
+			
+			boardPanel.resetButton();
+		}
+	}
+	
+	private void validMoves(int p, int d1, int d2)
+	{
+		validMovesExist = false;
+		moves = new boolean[28];
+		int oppColor = 0;
+		
+		//Available moves specific to player 1
+		if( p == 1 )
+		{
+			move1 = firstPressed - d1;
+			move2 = firstPressed - d2;
+			move3 = firstPressed - d1 - d2;
+			oppColor = 2;
+		}
+		
+		//Available moves specific to player 2
+		if( p == 2 )
+		{
+			move1 = firstPressed + d1;
+			move2 = firstPressed + d2;
+			move3 = firstPressed + d1 + d2;
+			oppColor = 1;
+		}
+		
+		//Using dice 1
+		if( move1 >= 0 && move1 <= 25 && d1Used == false )
+		{
+			//Slot is empty or same color as player
+			if( bkBoard[ move1 ].getCheckerTopColor() != oppColor )
+			{
+				validMovesExist = true;
+				moves[ move1 ] = true;
+			}
+		}
+		//Using dice 2
+		if( move2 >= 0 && move2 <= 25 && d2Used == false )
+		{
+			//Slot is empty or same color as player
+			if( bkBoard[ move2 ].getCheckerTopColor() != oppColor )
+			{
+				validMovesExist = true;
+				moves[ move2 ] = true;
+			}
+		}	
+		//Using dice 1 and 2 as one move
+		if( move3 >= 0 && move3 <= 25 && d1Used == false && d2Used == false && d3Used == false )
+		{
+			//Slot is empty or same color as player
+			if( bkBoard[ move3 ].getCheckerTopColor() != oppColor )
+			{
+				validMovesExist = true;
+				moves[ move3 ] = true;
+			}
+		}
+	}
+	
     //Draw game for the User to See
     private void drawGame()
     {
@@ -377,7 +248,7 @@ public class Board
     private void setUpSlotCombined(int numSlot, int color, int numCheckers)
     {   
         //Valid input values for a slot
-        if( bkBoard[numSlot].setNumCheckers(color,numCheckers) )    //LOGIC
+        if( bkBoard[numSlot].setNumCheckers(color, numCheckers) )    //LOGIC
         {
             //Draw to Screen
             boardPanel.setSlot(numSlot, color, numCheckers);        //GUI
@@ -388,32 +259,24 @@ public class Board
         }
     }
 	
-	//Updates GUI/Logic of a slot
-	private void updateSlotCombined(int numSlot, int color, int numCheckers, int colorHit)
-	{
-		//LOGIC
-		bkBoard[ numSlot ].setNumCheckers( color, numCheckers);
-		//GUI
-		boardPanel.setSlot( numSlot, color, numCheckers );
-		
-		if( colorHit == 1 )
+	private void diceUsed(int p, int d1, int d2)
+	{	
+		if( secondPressed == move1 )
+		{	
+			d1Used = true;
+		}	
+		if( secondPressed == move2 )
 		{
-			int hitCheckers = bkBoard[ 27 ].getCheckerNumInSlot();
-			//LOGIC
-			bkBoard[ 27 ].setNumCheckers( 1, hitCheckers + 1 );
-			//GUI
-			boardPanel.setSlot( 27, 1, hitCheckers + 1 );
+			d2Used = true;
 		}
-		else if( colorHit == 2 )
+		if( secondPressed == move3 )
 		{
-			int hitCheckers = bkBoard[ 26 ].getCheckerNumInSlot();
-			//LOGIC
-			bkBoard[ 26 ].setNumCheckers( 1, hitCheckers + 1 );
-			//GUI
-			boardPanel.setSlot( 26, 2, hitCheckers + 1 );
+			d3Used = true;
 		}
-		else
-			return;
+		if( d1Used == true && d2Used == true )
+		{
+			d3Used = true;
+		}
 	}
 	
     //Just a function to show where each array/button slot is located ()

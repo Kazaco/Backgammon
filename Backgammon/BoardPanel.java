@@ -158,7 +158,10 @@ public class BoardPanel extends JPanel
     //Change a specific slots checker color/number
     public void setSlot(int numSlot, int colorCheckers, int numCheckers)
     {
-        buttons[numSlot].setCheckers(colorCheckers, numCheckers);
+		if( numCheckers == 0 )
+			buttons[numSlot].setCheckers(0, 0);
+		else
+			buttons[numSlot].setCheckers(colorCheckers, numCheckers);
     }
 
     //Accessors: for button presses
