@@ -27,13 +27,17 @@ public class ControlPanel extends JPanel
         //Set-up event listening
         RollDice handler = new RollDice();
 
-        JButton button1 = new JButton("1");
+        //Far Left Panel (Pop-up Rules in HTML?)
+        HelpButton button1 = new HelpButton();
         add(button1);
 
-        JPanel button2 = new JPanel();
-        add(button2);
+        //Left Middle (Empty Panel)
+        JPanel panel2 = new JPanel();
+        panel2.setBackground(new Color(85,60,42));
+        add(panel2);
 
-        JButton button3 = new JButton("3");
+        //Middle right panel
+        DiceButton button3 = new DiceButton();
         add(button3);
         button3.addActionListener( handler );
 
