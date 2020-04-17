@@ -43,31 +43,63 @@ public class Board
         while( gameOver() == false )
         {	
 			Random random = new Random();
-			int d1, d2;
+			int d1 = -1, d2 = -1;
+
+			System.out.println("\nPlayer 1's turn");
 			
 			//Doubles not yet supported
 			do{
-				d1 = random.nextInt(6) + 1;
-				d2 = random.nextInt(6) + 1;
-			}while( d1 == d2 );
+				//If player doesn't need to roll again, and player has clicked the button --- retrieve dice values
+				if( controlPanel.needsToRoll() == false && controlPanel.hasPressedButton() == true)
+				{
+					d1 = controlPanel.getDiceOne();
+					d2 = controlPanel.getDiceTwo();
+					
+					//Handle Doubles
+					if( d1 == d2)
+					{
+						controlPanel.resetRoll();
+					}
+				}
+			}while( d1 == -1 || d2 == -1 );
 			
-			System.out.println("Player 1's turn");
 			System.out.println("Dice roll 1 = " + d1);
-			System.out.println("Dice roll 2 = " + d2);
+			System.out.println("Dice roll 2 = " + d2 + "\n");
 			
 			takeTurn( 1, d1, d2 );
+
+			//Reset Rolling
+			controlPanel.resetRoll();
+			d1 = -1;
+			d2 = -1;
+
+			System.out.println("\nPlayer 2's turn");
 			
 			//Doubles not yet supported
 			do{
-				d1 = random.nextInt(6) + 1;
-				d2 = random.nextInt(6) + 1;
-			}while( d1 == d2 );
+				//If player doesn't need to roll again, and player has clicked the button --- retrieve dice values
+				if( (controlPanel.needsToRoll() == false) && (controlPanel.hasPressedButton() == true) )
+				{
+					d1 = controlPanel.getDiceOne();
+					d2 = controlPanel.getDiceTwo();
+
+					if( d1 == d2)
+					{
+						controlPanel.resetRoll();
+					}
+				}
+			}while( d1 == -1 || d2 == -1 );
 
 			System.out.println("Player 2's turn");
 			System.out.println("Dice roll 1 = " + d1);
-			System.out.println("Dice roll 2 = " + d2);
+			System.out.println("Dice roll 2 = " + d2 + "\n");
 			
 			takeTurn( 2, d1, d2 );
+
+			//Reset Rolling
+			controlPanel.resetRoll();
+			d1 = -1;
+			d2 = -1;
 		}
 		
 		System.out.println("Game over!");

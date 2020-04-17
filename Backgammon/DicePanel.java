@@ -19,6 +19,7 @@ public class DicePanel extends JPanel
         super();
     }
 
+    //Mutators:
     public void setDiceOne(int num)
     {
         dice1 = num;
@@ -29,6 +30,7 @@ public class DicePanel extends JPanel
         dice2 = num;
     }
 
+    //Accessors:
     public int getDiceOne()
     {
         return dice1;
