@@ -46,7 +46,6 @@ public class Board
 			int d1 = -1, d2 = -1;
 
 			System.out.println("\nPlayer 1's turn");
-			
 			//Doubles not yet supported
 			do{
 				//If player doesn't need to roll again, and player has clicked the button --- retrieve dice values
@@ -65,16 +64,18 @@ public class Board
 			
 			System.out.println("Dice roll 1 = " + d1);
 			System.out.println("Dice roll 2 = " + d2 + "\n");
-			
-			takeTurn( 1, d1, d2 );
 
+			//User takes their turn
+			//Note: Reset button to prevent user from moving pieces from another person's first selected
+			boardPanel.resetButton();
+			takeTurn( 1, d1, d2 );
+			
 			//Reset Rolling
 			controlPanel.resetRoll();
 			d1 = -1;
 			d2 = -1;
 
 			System.out.println("\nPlayer 2's turn");
-			
 			//Doubles not yet supported
 			do{
 				//If player doesn't need to roll again, and player has clicked the button --- retrieve dice values
@@ -90,13 +91,16 @@ public class Board
 				}
 			}while( d1 == -1 || d2 == -1 );
 
-			System.out.println("Player 2's turn");
+			//Printing
 			System.out.println("Dice roll 1 = " + d1);
 			System.out.println("Dice roll 2 = " + d2 + "\n");
-			
+
+			//User takes their turn
+			//Note: Reset button to prevent user from moving pieces from another person's first selected
+			boardPanel.resetButton();
 			takeTurn( 2, d1, d2 );
 
-			//Reset Rolling
+			//Reset Rolling for next player
 			controlPanel.resetRoll();
 			d1 = -1;
 			d2 = -1;
