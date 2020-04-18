@@ -34,18 +34,26 @@ public class Board
     public void play()
     {
         //Initialize all Panels and Frame
-        drawGame();
-
-        setUpBoard();
+		drawGame();
+		
+		//Put/draw checkers to the right locations on the board
+		setUpBoard();
+		
+		//Introduction w/ user
         System.out.println("New game begins!\n");
-        infoPanel.changeText("Welcome to Backgammon!");
+		infoPanel.changeText("Welcome to Backgammon!\n");
 
+		infoPanel.changeText("Roll the dice to determine who goes first!");
+		infoPanel.changeText("...........");
+		infoPanel.changeText("Player 1 rolled the highest value! He goes first!");
+		
         while( gameOver() == false )
         {	
 			Random random = new Random();
 			int d1 = -1, d2 = -1;
 
-			System.out.println("\nPlayer 1's turn");
+			System.out.println("Player 1's turn");
+			infoPanel.changeText("Player 1's turn! Please roll the dice.");
 			//Doubles not yet supported
 			do{
 				//If player doesn't need to roll again, and player has clicked the button --- retrieve dice values
@@ -61,9 +69,10 @@ public class Board
 					}
 				}
 			}while( d1 == -1 || d2 == -1 );
-			
 			System.out.println("Dice roll 1 = " + d1);
 			System.out.println("Dice roll 2 = " + d2 + "\n");
+			infoPanel.changeText("Dice roll 1 = " + d1);
+			infoPanel.changeText("Dice roll 2 = " + d2 + "\n");
 
 			//User takes their turn
 			//Note: Reset button to prevent user from moving pieces from another person's first selected
@@ -76,6 +85,7 @@ public class Board
 			d2 = -1;
 
 			System.out.println("\nPlayer 2's turn");
+			infoPanel.changeText("Player 2's turn! Please roll the dice.");
 			//Doubles not yet supported
 			do{
 				//If player doesn't need to roll again, and player has clicked the button --- retrieve dice values
@@ -94,6 +104,8 @@ public class Board
 			//Printing
 			System.out.println("Dice roll 1 = " + d1);
 			System.out.println("Dice roll 2 = " + d2 + "\n");
+			infoPanel.changeText("Dice roll 1 = " + d1);
+			infoPanel.changeText("Dice roll 2 = " + d2 + "\n");
 
 			//User takes their turn
 			//Note: Reset button to prevent user from moving pieces from another person's first selected

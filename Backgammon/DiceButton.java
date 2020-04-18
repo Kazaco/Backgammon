@@ -34,6 +34,7 @@ public class DiceButton extends JButton
 
         int x = getWidth() / 20;
         int y = getHeight() / 20;
+        int radius = getWidth()/5;
 
         //Grey
         g2d.setColor(new Color(32,32,32));
@@ -41,18 +42,11 @@ public class DiceButton extends JButton
 
         //Yellow
         g2d.setColor(new Color(206,184,136));
-        // g2d.fillRect(x, y, getWidth() - 2 * x, getHeight() - 2 * y);
         g2d.fill3DRect(x, y, getWidth() - 2 * x, getHeight() - 2 * y, true);
 
         //Yellow Inner
         g2d.setColor(new Color(206,184,136));
         g2d.fill3DRect(x + x, y + y, getWidth() - 4 * x, getHeight() - 4 * y, true);
-
-        int radius = getWidth()/5;
-        int xx = getWidth()/4 - radius;
-        int yy = radius;
-        int middleX = getWidth() / 2;
-        int middleY = getHeight() / 2;
 
         //Draw Text
         g2d.setFont(new Font("Calibri", Font.BOLD, radius));
