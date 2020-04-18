@@ -1,14 +1,18 @@
 //Control Panel Constructor
 import javax.swing.JPanel;
-import javax.swing.JButton;
 import java.awt.GridLayout;
 import java.util.Random;
+import javax.swing.JFrame;
+import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
 //Control Panel paintcomponent
 import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 //Control Panel Event Handling
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class ControlPanel extends JPanel
@@ -26,9 +30,11 @@ public class ControlPanel extends JPanel
 
         //Set-up event listening
         RollDice handler = new RollDice();
+        HelpPage hHandler = new HelpPage();
 
         //Far Left Panel (Pop-up Rules in HTML?)
         HelpButton button1 = new HelpButton();
+        button1.addActionListener( hHandler );
         add(button1);
 
         //Left Middle (Empty Panel)
@@ -48,6 +54,7 @@ public class ControlPanel extends JPanel
 
     }
 
+    //Rolling Dice Button Listener
     private class RollDice implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
@@ -79,6 +86,39 @@ public class ControlPanel extends JPanel
                 //Make player unable to change dice chosen
                 needsToRoll = false;
             }
+        }
+    }
+
+    //Rule's Button Listener
+    private class HelpPage implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            //Create a new pop-up frame
+            JFrame help = new JFrame("Rules");
+
+            //Insert our HTML page to the dialog
+            JEditorPane jedit = new JEditorPane();
+            jedit.setEditable(false);
+
+            //Need to handle an IO exception
+            try
+            {
+                jedit.setPage(getClass().getResource("help.html"));
+            }
+            catch( IOException exception)
+            {
+                //Problem?
+                System.out.println("Cant find help.html");
+            }
+
+            //Add Scrollable bar on right
+            JScrollPane scroll = new JScrollPane(jedit);
+
+            //Make page visible
+            help.add(scroll);
+            help.setSize(400,400); //Beginning Size
+            help.setVisible(true);
         }
     }
 
