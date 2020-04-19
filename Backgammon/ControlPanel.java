@@ -5,14 +5,13 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
+import java.io.IOException;
 //Control Panel paintcomponent
 import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 //Control Panel Event Handling
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class ControlPanel extends JPanel
@@ -97,7 +96,7 @@ public class ControlPanel extends JPanel
             //Create a new pop-up frame
             JFrame help = new JFrame("Rules");
 
-            //Insert our HTML page to the dialog
+            //Insert our HTML page into the frame
             JEditorPane jedit = new JEditorPane();
             jedit.setEditable(false);
 
@@ -114,9 +113,9 @@ public class ControlPanel extends JPanel
 
             //Add Scrollable bar on right
             JScrollPane scroll = new JScrollPane(jedit);
+            help.add(scroll);
 
             //Make page visible
-            help.add(scroll);
             help.setSize(400,400); //Beginning Size
             help.setVisible(true);
         }

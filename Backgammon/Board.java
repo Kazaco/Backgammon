@@ -4,6 +4,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import java.util.Random;
+//Menu Event Handling
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JFileChooser;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Formatter;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 //Class to put the entire board together
 public class Board
@@ -362,34 +373,6 @@ public class Board
 		boardPanel.noValidMoves( numSlot, false );		
 	}
 	
-    //Draw game for the User to See
-    private void drawGame()
-    {
-        //Create frame for Backgammon
-        frame = new JFrame("Backgammon");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // frame.setResizable(false);
-        frame.setMinimumSize(new Dimension (800,600));  //Trying to make our game function correctly even if user resized screen
-
-        //TOP 
-        //Display whose turn it is, display if move is valid or not
-        infoPanel = new InfoPanel();
-        infoPanel.setPreferredSize(new Dimension(800,100));
-        frame.add(infoPanel, BorderLayout.NORTH);
-
-        //MIDDLE
-        //Game Board, let player drag and drop pieces on their turn
-        boardPanel = new BoardPanel();
-        frame.add(boardPanel, BorderLayout.CENTER);
-
-        //BOTTOM
-        //Help Pop-up Panel, Roll Dice Sub-panel, whatever else
-        controlPanel = new ControlPanel();
-        controlPanel.setPreferredSize(new Dimension(800,150));
-        frame.add(controlPanel, BorderLayout.SOUTH);
-        frame.setVisible(true);
-    }
-
     //Initial board set-up
     private void setUpBoard()
     {
@@ -458,4 +441,109 @@ public class Board
 		else
 			return false;
 	}
+
+	//Draw game for the User to See
+	private void drawGame()
+	{
+		//Create frame for Backgammon
+		frame = new JFrame("Backgammon");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setMinimumSize(new Dimension (800,600));  //Trying to make our game function correctly even if user resized screen
+
+		//Create Functioning Menu located at Top
+		JMenuBar bar = new JMenuBar();
+		JMenu menu = new JMenu("File");
+		menu.setMnemonic(KeyEvent.VK_F);
+		JMenuItem load = new JMenuItem("Load");
+		load.setMnemonic(KeyEvent.VK_L);
+		JMenuItem save = new JMenuItem("Save");
+		save.setMnemonic(KeyEvent.VK_S);
+
+		//Add Listeners
+		SaveGame saveGame = new SaveGame();
+		save.addActionListener(saveGame);
+
+		//Add Menu items to frame
+		menu.add(load);
+		menu.add(save);
+		bar.add(menu);
+		frame.setJMenuBar(bar);
+
+		//TOP 
+		//Display whose turn it is, display if move is valid or not
+		infoPanel = new InfoPanel();
+		infoPanel.setPreferredSize(new Dimension(800,100));
+		frame.add(infoPanel, BorderLayout.NORTH);
+
+		//MIDDLE
+		//Game Board, let player push button to move pieces on their turn
+		boardPanel = new BoardPanel();
+		frame.add(boardPanel, BorderLayout.CENTER);
+
+		//BOTTOM
+		//Help Pop-up Panel, Roll Dice Sub-panel, whatever else
+		controlPanel = new ControlPanel();
+		controlPanel.setPreferredSize(new Dimension(800,150));
+		frame.add(controlPanel, BorderLayout.SOUTH);
+		frame.setVisible(true);
+	}
+
+	private class SaveGame implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			//Create file-saving panel
+			JFileChooser chooseFile = new JFileChooser();
+			
+			//Put choosefile into the game's directory
+			chooseFile.setCurrentDirectory( new File(".").getAbsoluteFile());
+
+			int buttonChosen = chooseFile.showSaveDialog(frame);
+			if(buttonChosen == chooseFile.APPROVE_OPTION)
+			{
+				//Get user's input for save file
+				File saveFile = chooseFile.getSelectedFile();
+				Formatter output = null;
+
+				try
+				{
+					output = new Formatter(saveFile);
+
+					//String to store all our game's data
+					StringBuilder saveString = new StringBuilder();
+
+					//Retrieve all checker locations (same format as setUpSlotCombined)
+					for(int i = 0; i < bkBoard.length; i++)
+					{
+						saveString.append(i + " " + bkBoard[i].getCheckerTopColor() + " " + bkBoard[i].getCheckerNumInSlot() + "\n");
+					}
+
+					//If player needs to roll and what values are currently rolled if they dont
+					saveString.append( "Current Player" + " " + controlPanel.needsToRoll() + "\n");
+					saveString.append( controlPanel.getDiceOne() + " " + controlPanel.getDiceTwo() + " " + d1Used + " " + d2Used);
+
+					//Print to file
+					output.format(saveString.toString());
+					infoPanel.changeText("\nGame Saved!....");
+				}
+				catch(FileNotFoundException exception)
+				{
+					infoPanel.changeText("\nFile not found, please try to save again!");
+				}
+				finally
+				{
+					if(output != null)
+					{
+						output.close();
+					}
+				}
+			}
+			else
+			{
+				//Player didnt save game
+			}
+		}
+	}
+
+
 }
