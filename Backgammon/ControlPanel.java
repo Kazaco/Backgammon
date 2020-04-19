@@ -150,6 +150,23 @@ public class ControlPanel extends JPanel
         hasPressedButton = false;
     }
 
+    public void alreadyRolled()
+    {
+        //Player has already rolled (for loading game)
+        needsToRoll = false;
+        hasPressedButton = true;
+    }
+
+    public void setDiceOne(int d1)
+    {
+        dicePanel.setDiceOne(d1);
+    }
+
+    public void setDiceTwo(int d2)
+    {
+        dicePanel.setDiceTwo(d2);
+    }
+
     public void paintComponent(Graphics g)
     {
         //Call superclass's paintcomponent

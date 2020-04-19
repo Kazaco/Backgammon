@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import java.util.Random;
+import java.util.Scanner;
+
 //Menu Event Handling
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -32,6 +34,7 @@ public class Board
 	private boolean validMovesExist;			//Keeps track of the existence of valid moves each turn
 	private boolean d1Used, d2Used, d3Used;		//Keeps track of rolls used during each turn
 	private int move1, move2, move3;			//Moves specific to player updated each turn
+	private int d1, d2;
 
     //Create an empty board
     public Board()
@@ -61,8 +64,8 @@ public class Board
 		
         while( gameOver() == false )
         {	
-			Random random = new Random();
-			int d1 = -1, d2 = -1;
+			d1 = -1;
+			d2 = -1;
 
 			System.out.println("Player 1's turn");
 			infoPanel.changeText("Player 1's turn! Please roll the dice.");
@@ -462,6 +465,8 @@ public class Board
 		//Add Listeners
 		SaveGame saveGame = new SaveGame();
 		save.addActionListener(saveGame);
+		LoadGame loadGame = new LoadGame();
+		load.addActionListener(loadGame);
 
 		//Add Menu items to frame
 		menu.add(load);
@@ -543,6 +548,105 @@ public class Board
 				//Player didnt save game
 			}
 		}
+	}
+
+	private class LoadGame implements ActionListener
+	{
+		public void actionPerformed(ActionEvent event)
+		{
+			//Create file-saving panel
+			JFileChooser chooseFile = new JFileChooser();
+			
+			//Put choosefile into the game's directory
+			chooseFile.setCurrentDirectory( new File(".").getAbsoluteFile());
+
+			int buttonChosen = chooseFile.showOpenDialog(frame);
+			if(buttonChosen == chooseFile.APPROVE_OPTION)
+			{
+				//Get user's input for load file
+				File loadFile = chooseFile.getSelectedFile();
+				Scanner input = null;
+
+				try
+				{
+					input = new Scanner(loadFile);
+					System.out.println(bkBoard.length);
+					for(int setUpBoard = 0; setUpBoard < bkBoard.length; setUpBoard++)
+					{
+						// System.out.println( input.nextInt() + " " + input.nextInt() + " " + input.nextInt());
+						setUpSlotCombined( input.nextInt(), input.nextInt() , input.nextInt() );
+					}
+
+					infoPanel.changeText("===== Game Loaded ====\n\n");
+
+					input.next(); //Placeholder
+					input.next(); //Placeholder
+
+					//Check of player rolled before saving
+					if( input.next().equals("false"))
+					{
+						//Dice values
+						d1 = input.nextInt();
+						controlPanel.setDiceOne(d1);
+						d2 = input.nextInt();
+						controlPanel.setDiceTwo(d2);
+
+						//Info for User
+						infoPanel.changeText("\nIt is currently Player X's turn. You rolled before you saved!\n");
+
+						//Rolled
+						controlPanel.alreadyRolled();
+					}
+					else
+					{
+						//Put previous dice values on die, but 
+						//reset d1 and d2
+						d1 = -1;
+						controlPanel.setDiceOne(input.nextInt());
+						d2 = -1;
+						controlPanel.setDiceTwo(input.nextInt());
+
+						//Info for User
+						infoPanel.changeText("\nIt is currently Player X's turn. You need to roll!\n");
+
+						//Did not roll
+						controlPanel.resetRoll();
+					}
+
+					//Dice Used
+					if( input.next().equals("true") )
+					{
+						d1Used = true;
+					}
+					else
+					{
+						d1Used = false;
+					}
+
+					if( input.next().equals("true") )
+					{
+						d2Used = true;
+					}
+					else
+					{
+						d2Used = false;
+					}
+				}
+				catch( FileNotFoundException exception)
+				{
+					infoPanel.changeText("\nFile not found, please try to load again!");
+				}
+				finally
+				{
+					if(input != null)
+					{
+						input.close();
+					}
+
+				}
+			}
+		}
+
 	}
 
 
