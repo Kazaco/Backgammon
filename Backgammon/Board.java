@@ -34,7 +34,9 @@ public class Board
 	private boolean validMovesExist;			//Keeps track of the existence of valid moves each turn
 	private boolean d1Used, d2Used, d3Used;		//Keeps track of rolls used during each turn
 	private int move1, move2, move3;			//Moves specific to player updated each turn
-	private int d1, d2;
+	private int d1, d2, d3, d4;					//Dice variables
+	private boolean loadGame, doneIntro;		//Flag times available to save/load
+	private int curPlayer;						//Current Player's turn
 
     //Create an empty board
     public Board()
@@ -54,84 +56,119 @@ public class Board
 		//Put/draw checkers to the right locations on the board
 		setUpBoard();
 		
-		//Introduction w/ user
-		infoPanel.changeText("Welcome to Backgammon!\n");
-
-		infoPanel.changeText("Roll the dice to determine who goes first!");
-		infoPanel.changeText("...........");
-		infoPanel.changeText("Player 1 rolled the highest value! He goes first!");
+		//INTRODUCTION
+		infoPanel.changeText("Welcome to Backgammon!");
+		infoPanel.changeText("Note 1: You can only save games after the first roll.");
+		infoPanel.changeText("Note 2: You can only load games before the first roll.");
+		infoPanel.changeText("\n\nRoll the dice to determine who goes first!");
 		
+		//Determine who goes first
+		d1 = -1;				//Die values not rolled
+		d2 = -1;
+		doneIntro = false;
+		loadGame = true;
+
+		while( (d1 == -1 || d2 == -1) && loadGame == true)
+		{
+			//If player doesn't need to roll again, and player has clicked the button --- retrieve dice values
+			if( controlPanel.needsToRoll() == false && controlPanel.hasPressedButton() == true && loadGame == true)
+			{
+				d1 = controlPanel.getDiceOne();
+				d2 = controlPanel.getDiceTwo();
+				
+				//Handle rolled same value
+				if( d1 == d2)
+				{
+					infoPanel.changeText("...........");
+					infoPanel.changeText("You rolled the same values. Roll again!");
+
+					//Reset Dice Values
+					d1 = -1;
+					d2 = -1;
+					
+					//Reset roll before leaving loop. Don't need to reset button in other
+					//checks b/c we should use this roll as the first move
+					controlPanel.resetRoll();
+				}
+				//Player 1 rolled the highest value
+				else if(d1 > d2)
+				{
+					infoPanel.changeText("...........");
+					infoPanel.changeText("Player 1 rolled the highest value they go first!");
+					curPlayer = 1;
+
+				}
+				//Player 2 rolled the highest value
+				else
+				{
+					infoPanel.changeText("...........");
+					infoPanel.changeText("Player 2 rolled the highest value they go first!");
+					curPlayer = 2;
+				}
+			}
+		}
+
+		//END OF INTRODUCTION
+		//START OF GAME
+
+		doneIntro = true;
+		loadGame = false;
         while( gameOver() == false )
         {	
-			d1 = -1;
+			d1 = -1;			//Die values not rolled
 			d2 = -1;
 
-			System.out.println("Player 1's turn");
-			infoPanel.changeText("Player 1's turn! Please roll the dice.");
-			//Doubles not yet supported
 			do{
 				//If player doesn't need to roll again, and player has clicked the button --- retrieve dice values
 				if( controlPanel.needsToRoll() == false && controlPanel.hasPressedButton() == true)
 				{
 					d1 = controlPanel.getDiceOne();
 					d2 = controlPanel.getDiceTwo();
+
+					//Display Dice Rolled
+					infoPanel.changeText("Dice roll 1 = " + d1);
+					infoPanel.changeText("Dice roll 2 = " + d2);
 					
 					//Handle Doubles
 					if( d1 == d2)
 					{
-						controlPanel.resetRoll();
+						//Handle Normal
+						infoPanel.changeText("You rolled doubles! You get to move 4 times!\n");
+						
+						//FIRST SET
+						//User takes their turn
+						//Note: moved resetButton() to takeTurn() function
+						takeTurn( curPlayer, d1, d2 );	//Doesnt work currently
+						takeTurn( curPlayer, d1, d2 );
+
+						System.out.println("Hello");
+
+						//SECOND SET
+						//User takes their turn
+						//Note: moved resetButton() to takeTurn() function
+						takeTurn( curPlayer, d1, d2 );
+						takeTurn( curPlayer, d1, d2 );
 					}
-				}
-			}while( d1 == -1 || d2 == -1 );
-			System.out.println("Dice roll 1 = " + d1);
-			System.out.println("Dice roll 2 = " + d2 + "\n");
-			infoPanel.changeText("Dice roll 1 = " + d1);
-			infoPanel.changeText("Dice roll 2 = " + d2 + "\n");
-
-			//User takes their turn
-			//Note: moved resetButton() to takeTurn() function
-			takeTurn( 1, d1, d2 );
-			
-			//Reset Rolling
-			controlPanel.resetRoll();
-			d1 = -1;
-			d2 = -1;
-
-			System.out.println("\nPlayer 2's turn");
-			infoPanel.changeText("Player 2's turn! Please roll the dice.");
-			//Doubles not yet supported
-			do{
-				//If player doesn't need to roll again, and player has clicked the button --- retrieve dice values
-				if( (controlPanel.needsToRoll() == false) && (controlPanel.hasPressedButton() == true) )
-				{
-					d1 = controlPanel.getDiceOne();
-					d2 = controlPanel.getDiceTwo();
-					
-					//Handle Doubles
-					if( d1 == d2)
+					else
 					{
-						controlPanel.resetRoll();
+						//Handle Normal
+						infoPanel.changeText("\n");
+
+						//User takes their turn
+						//Note: moved resetButton() to takeTurn() function
+						takeTurn( curPlayer, d1, d2 );
 					}
 				}
-			}while( d1 == -1 || d2 == -1 );
+			}while( d1 == -1 || d2 == -1);
 
-			//Printing
-			System.out.println("Dice roll 1 = " + d1);
-			System.out.println("Dice roll 2 = " + d2 + "\n");
-			infoPanel.changeText("Dice roll 1 = " + d1);
-			infoPanel.changeText("Dice roll 2 = " + d2 + "\n");
-
-			//User takes their turn
-			//Note: Moved resetButton() to takeTurn() function
-			takeTurn( 2, d1, d2 );
-
-			//Reset Rolling for next player
+			//Reset Rolling for next player and move to next plater
 			controlPanel.resetRoll();
-			d1 = -1;
-			d2 = -1;
+			curPlayer = (curPlayer % 2) + 1;
+			infoPanel.changeText("Player " + curPlayer +"'s turn! Please roll the dice.");
 		}
-		
-		System.out.println("Game over!");
+		doneIntro = false;
+		infoPanel.changeText("==== GAME OVER ====");
+		infoPanel.changeText("Player " + curPlayer +" has won!");
     }
 
 	//For now, the color doesn't matter because of how primitive checker movement is
@@ -536,55 +573,59 @@ public class Board
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			//Create file-saving panel
-			JFileChooser chooseFile = new JFileChooser();
-			
-			//Put choosefile into the game's directory
-			chooseFile.setCurrentDirectory( new File(".").getAbsoluteFile());
-
-			int buttonChosen = chooseFile.showSaveDialog(frame);
-			if(buttonChosen == chooseFile.APPROVE_OPTION)
+			//Can't save unless you got passed initial roll in beginning
+			if(doneIntro == true)
 			{
-				//Get user's input for save file
-				File saveFile = chooseFile.getSelectedFile();
-				Formatter output = null;
+				//Create file-saving panel
+				JFileChooser chooseFile = new JFileChooser();
+				
+				//Put choosefile into the game's directory
+				chooseFile.setCurrentDirectory( new File(".").getAbsoluteFile());
 
-				try
+				int buttonChosen = chooseFile.showSaveDialog(frame);
+				if(buttonChosen == chooseFile.APPROVE_OPTION)
 				{
-					output = new Formatter(saveFile);
+					//Get user's input for save file
+					File saveFile = chooseFile.getSelectedFile();
+					Formatter output = null;
 
-					//String to store all our game's data
-					StringBuilder saveString = new StringBuilder();
-
-					//Retrieve all checker locations (same format as setUpSlotCombined)
-					for(int i = 0; i < bkBoard.length; i++)
+					try
 					{
-						saveString.append(i + " " + bkBoard[i].getCheckerTopColor() + " " + bkBoard[i].getCheckerNumInSlot() + "\n");
+						output = new Formatter(saveFile);
+
+						//String to store all our game's data
+						StringBuilder saveString = new StringBuilder();
+
+						//Retrieve all checker locations (same format as setUpSlotCombined)
+						for(int i = 0; i < bkBoard.length; i++)
+						{
+							saveString.append(i + " " + bkBoard[i].getCheckerTopColor() + " " + bkBoard[i].getCheckerNumInSlot() + "\n");
+						}
+
+						//If player needs to roll and what values are currently rolled if they dont
+						saveString.append( curPlayer + " " + controlPanel.needsToRoll() + "\n");
+						saveString.append( controlPanel.getDiceOne() + " " + controlPanel.getDiceTwo() + " " + d1Used + " " + d2Used);
+
+						//Print to file
+						output.format(saveString.toString());
+						infoPanel.changeText("\nGame Saved!....");
 					}
-
-					//If player needs to roll and what values are currently rolled if they dont
-					saveString.append( "Current Player" + " " + controlPanel.needsToRoll() + "\n");
-					saveString.append( controlPanel.getDiceOne() + " " + controlPanel.getDiceTwo() + " " + d1Used + " " + d2Used);
-
-					//Print to file
-					output.format(saveString.toString());
-					infoPanel.changeText("\nGame Saved!....");
-				}
-				catch(FileNotFoundException exception)
-				{
-					infoPanel.changeText("\nFile not found, please try to save again!");
-				}
-				finally
-				{
-					if(output != null)
+					catch(FileNotFoundException exception)
 					{
-						output.close();
+						infoPanel.changeText("\nFile not found, please try to save again!");
+					}
+					finally
+					{
+						if(output != null)
+						{
+							output.close();
+						}
 					}
 				}
-			}
-			else
-			{
-				//Player didnt save game
+				else
+				{
+					//Player didnt save game
+				}
 			}
 		}
 	}
@@ -593,100 +634,109 @@ public class Board
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			//Create file-saving panel
-			JFileChooser chooseFile = new JFileChooser();
-			
-			//Put choosefile into the game's directory
-			chooseFile.setCurrentDirectory( new File(".").getAbsoluteFile());
-
-			int buttonChosen = chooseFile.showOpenDialog(frame);
-			if(buttonChosen == chooseFile.APPROVE_OPTION)
+			if(loadGame == true)
 			{
-				//Get user's input for load file
-				File loadFile = chooseFile.getSelectedFile();
-				Scanner input = null;
+				//Create file-saving panel
+				JFileChooser chooseFile = new JFileChooser();
 
-				try
+				//We loaded a game (dont need initial dice roll)
+				loadGame = false;
+				
+				//Put choosefile into the game's directory
+				chooseFile.setCurrentDirectory( new File(".").getAbsoluteFile());
+
+				int buttonChosen = chooseFile.showOpenDialog(frame);
+				if(buttonChosen == chooseFile.APPROVE_OPTION)
 				{
-					input = new Scanner(loadFile);
-					System.out.println(bkBoard.length);
-					for(int setUpBoard = 0; setUpBoard < bkBoard.length; setUpBoard++)
+					//Get user's input for load file
+					File loadFile = chooseFile.getSelectedFile();
+					Scanner input = null;
+
+					try
 					{
-						// System.out.println( input.nextInt() + " " + input.nextInt() + " " + input.nextInt());
-						setUpSlotCombined( input.nextInt(), input.nextInt() , input.nextInt() );
+						input = new Scanner(loadFile);
+						System.out.println(bkBoard.length);
+						for(int setUpBoard = 0; setUpBoard < bkBoard.length; setUpBoard++)
+						{
+							setUpSlotCombined( input.nextInt(), input.nextInt() , input.nextInt() );
+						}
+
+						infoPanel.changeText("===== Game Loaded ====\n\n");
+
+						//Check player's turn
+						curPlayer = input.nextInt();
+
+						//Check of player rolled before saving
+						if( input.next().equals("false"))
+						{
+							
+							//Rolled
+							controlPanel.alreadyRolled();
+
+							//Dice values
+							d1 = input.nextInt();
+							controlPanel.setDiceOne(d1);
+							d2 = input.nextInt();
+							controlPanel.setDiceTwo(d2);
+
+							//Info for User
+							infoPanel.changeText("\nIt is currently Player " + curPlayer + "'s turn. You rolled before you saved!\n");
+
+							//Rolled
+							controlPanel.alreadyRolled();
+						}
+						else
+						{
+							//Put previous dice values on die, but 
+							//reset d1 and d2
+							d1 = -1;
+							controlPanel.setDiceOne(input.nextInt());
+							d2 = -1;
+							controlPanel.setDiceTwo(input.nextInt());
+
+							//Info for User
+							infoPanel.changeText("\nIt is currently Player " + curPlayer + "'s turn. You need to roll!\n");
+
+							//Did not roll
+							controlPanel.resetRoll();
+						}
+
+						//Dice Used
+						if( input.next().equals("true") )
+						{
+							d1Used = true;
+						}
+						else
+						{
+							d1Used = false;
+						}
+
+						if( input.next().equals("true") )
+						{
+							d2Used = true;
+						}
+						else
+						{
+							d2Used = false;
+						}
+
+						//Prevent out of bounds, no more game loads
+						boardPanel.resetButton();
 					}
-
-					infoPanel.changeText("===== Game Loaded ====\n\n");
-
-					input.next(); //Placeholder
-					input.next(); //Placeholder
-
-					//Check of player rolled before saving
-					if( input.next().equals("false"))
+					catch( FileNotFoundException exception)
 					{
-						//Dice values
-						d1 = input.nextInt();
-						controlPanel.setDiceOne(d1);
-						d2 = input.nextInt();
-						controlPanel.setDiceTwo(d2);
-
-						//Info for User
-						infoPanel.changeText("\nIt is currently Player X's turn. You rolled before you saved!\n");
-
-						//Rolled
-						controlPanel.alreadyRolled();
+						infoPanel.changeText("\nFile not found, please try to load again!");
 					}
-					else
+					finally
 					{
-						//Put previous dice values on die, but 
-						//reset d1 and d2
-						d1 = -1;
-						controlPanel.setDiceOne(input.nextInt());
-						d2 = -1;
-						controlPanel.setDiceTwo(input.nextInt());
+						if(input != null)
+						{
+							input.close();
+						}
 
-						//Info for User
-						infoPanel.changeText("\nIt is currently Player X's turn. You need to roll!\n");
-
-						//Did not roll
-						controlPanel.resetRoll();
 					}
-
-					//Dice Used
-					if( input.next().equals("true") )
-					{
-						d1Used = true;
-					}
-					else
-					{
-						d1Used = false;
-					}
-
-					if( input.next().equals("true") )
-					{
-						d2Used = true;
-					}
-					else
-					{
-						d2Used = false;
-					}
-				}
-				catch( FileNotFoundException exception)
-				{
-					infoPanel.changeText("\nFile not found, please try to load again!");
-				}
-				finally
-				{
-					if(input != null)
-					{
-						input.close();
-					}
-
 				}
 			}
 		}
-
 	}
-
-
 }
