@@ -55,7 +55,6 @@ public class Board
 		setUpBoard();
 		
 		//Introduction w/ user
-        System.out.println("New game begins!\n");
 		infoPanel.changeText("Welcome to Backgammon!\n");
 
 		infoPanel.changeText("Roll the dice to determine who goes first!");
@@ -352,7 +351,7 @@ public class Board
 			}
 		}	
 		//Using dice 1 and 2 as one move
-		if( moves[move1] == true || moves[move2] == true && move3 >= min && move3 <= max && d1Used == false && d2Used == false && d3Used == false )
+		if( move3 >= min && move3 <= max && (moves[move1] == true || moves[move2] == true) && d1Used == false && d2Used == false && d3Used == false )
 		{
 			//Slot is empty or same color as player
 			if( bkBoard[ move3 ].getCheckerTopColor() != oppColor )
