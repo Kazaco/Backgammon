@@ -678,7 +678,10 @@ public class Board
 
 						//Check of player rolled before saving
 						if( input.next().equals("false"))
-						{		
+						{
+							//Info for User
+							infoPanel.changeText("It is currently Player " + curPlayer + "'s turn. You rolled before you saved!\n");
+									
 							//Rolled
 							controlPanel.alreadyRolled();
 
@@ -690,9 +693,6 @@ public class Board
 							controlPanel.setDiceOne(d1);
 							d2 = input.nextInt();
 							controlPanel.setDiceTwo(d2);
-
-							//Info for User
-							infoPanel.changeText("It is currently Player " + curPlayer + "'s turn. You rolled before you saved!\n");
 
 							//Rolled
 							controlPanel.alreadyRolled();
