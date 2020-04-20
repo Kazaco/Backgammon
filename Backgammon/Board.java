@@ -107,7 +107,8 @@ public class Board
 				{
 					d1 = controlPanel.getDiceOne();
 					d2 = controlPanel.getDiceTwo();
-
+					
+					//Handle Doubles
 					if( d1 == d2)
 					{
 						controlPanel.resetRoll();
@@ -176,7 +177,7 @@ public class Board
 			
 			//Changing the moves array (member data) based on what moves are valid
 			validMoves( p, d1, d2 );
-			boardPanel.highlightMoves( moves, true);
+			boardPanel.highlightMoves( firstPressed, moves, true );
 			boardPanel.resetButton();
 			
 			//Valid moves exist, waiting for a secondPressed that is valid
@@ -201,7 +202,7 @@ public class Board
 				if( secondPressed == firstPressed )
 				{
 					System.out.println("Move has been canceled. Try another slot.");
-					boardPanel.highlightMoves( moves, false );
+					boardPanel.highlightMoves( firstPressed, moves, false );
 					boardPanel.resetButton();
 					continue;
 				}
@@ -219,6 +220,7 @@ public class Board
 				
 				noValidMoves( firstPressed );
 				System.out.println("No valid moves exist. Resetting.");
+				boardPanel.highlightMoves( firstPressed, moves, false );
 				boardPanel.resetButton();
 				continue;
 			}
@@ -230,7 +232,7 @@ public class Board
 			//NOTE: hitMoves[ secondPressed ] returns a boolean that can be used in the update function (worked out nicely this way)
 			updateBoard( p, hitMoves[ secondPressed ] );
 			
-			boardPanel.highlightMoves( moves, false );
+			boardPanel.highlightMoves( firstPressed, moves, false );
 			boardPanel.resetButton();
 		}
 	}
@@ -271,6 +273,14 @@ public class Board
 		moves = new boolean[28];
 		hitMoves = new boolean[28];
 		int oppColor = 0;
+		int min = 1; int max = 24;
+		
+		//Change min and max available slot based on player's ability to bear off
+		if( canBearOff(p) )
+		{
+			min = 0;
+			max = 25;
+		}
 		
 		//Available moves specific to player 1
 		if( p == 1 )
@@ -278,6 +288,7 @@ public class Board
 			move1 = firstPressed - d1;
 			move2 = firstPressed - d2;
 			move3 = firstPressed - d1 - d2;
+			
 			oppColor = 2;
 			
 			//Need to enter
@@ -307,7 +318,7 @@ public class Board
 		}
 		
 		//Using dice 1
-		if( move1 >= 0 && move1 <= 25 && d1Used == false )
+		if( move1 >= min && move1 <= max && d1Used == false )
 		{
 			//Slot is empty or same color as player
 			if( bkBoard[ move1 ].getCheckerTopColor() != oppColor )
@@ -324,7 +335,7 @@ public class Board
 			}
 		}
 		//Using dice 2
-		if( move2 >= 0 && move2 <= 25 && d2Used == false )
+		if( move2 >= min && move2 <= max && d2Used == false )
 		{
 			//Slot is empty or same color as player
 			if( bkBoard[ move2 ].getCheckerTopColor() != oppColor )
@@ -341,7 +352,7 @@ public class Board
 			}
 		}	
 		//Using dice 1 and 2 as one move
-		if( move3 >= 0 && move3 <= 25 && d1Used == false && d2Used == false && d3Used == false )
+		if( moves[move1] == true || moves[move2] == true && move3 >= min && move3 <= max && d1Used == false && d2Used == false && d3Used == false )
 		{
 			//Slot is empty or same color as player
 			if( bkBoard[ move3 ].getCheckerTopColor() != oppColor )
@@ -357,6 +368,35 @@ public class Board
 				hitMoves[ move3 ] = true;
 			}
 		}
+	}
+	
+	private boolean canBearOff(int p)
+	{
+		int min, max, bar;
+		
+		if( p == 1 )
+		{
+			min = 7;
+			max = 24;
+			bar = 27;
+		}
+		else
+		{
+			min = 1;
+			max = 18;
+			bar = 26;
+		}
+		
+		for(int i = min; i <= max; i++)
+		{
+			if( bkBoard[ i ].getCheckerTopColor() == p )
+				return false;
+		}
+		
+		if( bkBoard[ bar ].getCheckerNumInSlot() != 0 )
+			return false;
+		
+		return true;
 	}
 	
 	//Slot blinks red

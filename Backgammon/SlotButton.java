@@ -6,10 +6,12 @@ import java.awt.Color;
 public abstract class SlotButton extends JButton
 {
 	protected Color background;
+	protected Color highlightColor;
 	protected boolean settingCheckers = false;
+	protected boolean highlightingMoves = false;
+	protected boolean pressHighlight = false;
 	protected int checkerColor = 0;
 	protected int numCheckers = 0;
-	protected boolean highlightingMoves = false;
 
 	//Sets background color
 	public abstract void setBkgdColor(Color b);
@@ -48,6 +50,12 @@ public abstract class SlotButton extends JButton
 	public void setHighlight(boolean flag)
 	{
 		highlightingMoves = flag;
+		setCheckers( checkerColor, numCheckers );
+	}
+	
+	public void setPressHighlight(boolean flag)
+	{
+		pressHighlight = flag;
 		setCheckers( checkerColor, numCheckers );
 	}
 	

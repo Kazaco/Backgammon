@@ -72,7 +72,7 @@ public class SlotButtonOffBoard extends SlotButton
 				y += getHeight()/22;
 			}
 		}
-		
+			
 		if( highlightingMoves == true )
 		{
 			g2d.setStroke( new BasicStroke(5) );

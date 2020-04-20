@@ -155,14 +155,22 @@ public class BoardPanel extends JPanel
         setBackground(new Color(85,60,42));
     }
 
-	public void highlightMoves( boolean[] moves, boolean flag )
+	public void highlightMoves( int press, boolean[] moves, boolean flag )
 	{
+		boolean shouldHighlightPress = false;
+		
 		for(int i = 0; i < moves.length; i++)
 		{
-			if( moves[i] == true)
+			if( moves[i] == true )
 			{
 				buttons[i].setHighlight( flag );
+				shouldHighlightPress = true;
 			}
+		}
+		
+		if( shouldHighlightPress )
+		{
+			buttons[ press ].setPressHighlight( flag );
 		}
 	}
 

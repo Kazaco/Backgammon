@@ -87,6 +87,13 @@ public class SlotButtonBar extends SlotButton
 			}
 		}
 		
+		if( pressHighlight == true )
+		{
+			g2d.setColor(Color.GREEN);
+			g2d.setStroke (new BasicStroke(4) );
+			g2d.drawOval(x, y, radius * 2, radius * 2);
+		}
+		
 		if( highlightingMoves == true )
 		{
 			g2d.setColor(Color.RED);
