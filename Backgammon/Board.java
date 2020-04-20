@@ -35,7 +35,7 @@ public class Board
 	private boolean d1Used, d2Used, d3Used;		//Keeps track of rolls used during each turn
 	private int move1, move2, move3;			//Moves specific to player updated each turn
 	private int d1, d2, d3, d4;					//Dice variables
-	private boolean loadGame, doneIntro;		//Flag times available to save/load
+	private boolean loadGame, doneIntro, nLoad;	//Flag times available to save/load
 	private int curPlayer;						//Current Player's turn
 
     //Create an empty board
@@ -175,7 +175,17 @@ public class Board
 	//Hopefully can write this function generically enough where using "p" inplace of 1 or 2 will eliminate a lot of redundant code
 	private void takeTurn(int p, int d1, int d2)
 	{	
-		d1Used = false; d2Used = false; d3Used = false;
+		//Loaded a game, dont overwrite D1/D2 used values
+		if(nLoad == true)
+		{
+			//Dont change dice used values
+			d3Used = false;
+		}
+		else
+		{
+			d1Used = false; d2Used = false; d3Used = false;
+		}
+
 		int barSlot;
 		
 		if( p == 1 )
@@ -668,10 +678,12 @@ public class Board
 
 						//Check of player rolled before saving
 						if( input.next().equals("false"))
-						{
-							
+						{		
 							//Rolled
 							controlPanel.alreadyRolled();
+
+							//Don't overwrite d1Used/d2Used values
+							nLoad = true;
 
 							//Dice values
 							d1 = input.nextInt();
@@ -680,7 +692,7 @@ public class Board
 							controlPanel.setDiceTwo(d2);
 
 							//Info for User
-							infoPanel.changeText("\nIt is currently Player " + curPlayer + "'s turn. You rolled before you saved!\n");
+							infoPanel.changeText("It is currently Player " + curPlayer + "'s turn. You rolled before you saved!\n");
 
 							//Rolled
 							controlPanel.alreadyRolled();
