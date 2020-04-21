@@ -36,7 +36,7 @@ public class Board
 	private int move1, move2, move3;			//Moves specific to player updated each turn
 	private int moveCounter;
 	private int d1, d2, d3, d4;					//Dice variables
-	private boolean doubles;
+	private boolean doubles, playedDoubles;
 	private boolean loadGame, doneIntro, nLoad;	//Flag times available to save/load
 	private int curPlayer;						//Current Player's turn
 
@@ -69,6 +69,7 @@ public class Board
 		d2 = -1;
 		doneIntro = false;
 		loadGame = true;
+		playedDoubles = false;	//Did they have doubles prior to saving
 
 		while( (d1 == -1 || d2 == -1) && loadGame == true)
 		{
@@ -141,8 +142,15 @@ public class Board
 						
 						//Handle Doubles
 						doubles = true;
+						
+						//Save state of when user saved during doubles
+						if(playedDoubles == false)
+						{
+							takeTurn( curPlayer, d1, d2 );
+							playedDoubles = true;
+						}
 						takeTurn( curPlayer, d1, d2 );
-						takeTurn( curPlayer, d1, d2 );
+						playedDoubles = false;	//Reset played doubles if they loaded, no effect if they were normally playing
 					}
 					else
 					{
@@ -173,16 +181,17 @@ public class Board
 		//Loaded a game, dont overwrite D1/D2 used values
 		if(nLoad == true)
 		{
-			//Dont change dice used values
+			//Dont change dice used values or moveCounter
 			d3Used = false;
+			nLoad = false;
 		}
 		else
 		{
 			d1Used = false; d2Used = false; d3Used = false;
+			moveCounter = 0;
 		}
 
 		int barSlot;
-		moveCounter = 0;
 		
 		if( p == 1 )
 			barSlot = 27;
@@ -703,7 +712,7 @@ public class Board
 						}
 
 						//If player needs to roll and what values are currently rolled if they dont
-						saveString.append( curPlayer + " " + controlPanel.needsToRoll() + "\n");
+						saveString.append( curPlayer + " " + playedDoubles + " " + moveCounter + " " + controlPanel.needsToRoll() + "\n");
 						saveString.append( controlPanel.getDiceOne() + " " + controlPanel.getDiceTwo() + " " + d1Used + " " + d2Used);
 
 						//Print to file
@@ -765,6 +774,19 @@ public class Board
 
 						//Check player's turn
 						curPlayer = input.nextInt();
+
+						//Check Played doubles
+						if( input.next().equals("false") )
+						{
+							playedDoubles = false;
+						}
+						else
+						{
+							playedDoubles = true;
+						}
+
+						//Move counter for doubles
+						moveCounter = input.nextInt();
 
 						//Check of player rolled before saving
 						if( input.next().equals("false"))
