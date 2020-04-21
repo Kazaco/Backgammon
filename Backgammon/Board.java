@@ -164,10 +164,13 @@ public class Board
 				}
 			}while( d1 == -1 || d2 == -1);
 
-			//Reset Rolling for next player and move to next plater
+			//Reset Rolling for next player and move to next player, only print below if player has not won
 			controlPanel.resetRoll();
-			curPlayer = (curPlayer % 2) + 1;
-			infoPanel.changeText("Player " + curPlayer +"'s turn! Please roll the dice.");
+			if( gameOver() == false )
+			{
+				curPlayer = (curPlayer % 2) + 1;
+				infoPanel.changeText("Player " + curPlayer +"'s turn! Please roll the dice.");
+			}
 		}
 		doneIntro = false;
 		infoPanel.changeText("==== GAME OVER ====");
