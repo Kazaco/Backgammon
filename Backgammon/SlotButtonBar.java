@@ -14,7 +14,7 @@ public class SlotButtonBar extends SlotButton
     {
 		//Call Parent Constructor
 		super();
-		background = new Color(85,60,42);
+		background = new Color(85, 60, 42);
     }
 	
 	public void setBkgdColor(Color b)
@@ -28,7 +28,21 @@ public class SlotButtonBar extends SlotButton
 	{
 		
 	}
-
+	
+	public void setNoValidMoves(boolean flag)
+	{
+		if ( flag == true )
+		{
+			background = Color.RED;
+		}
+		else
+		{
+			background = new Color(85, 60, 42);
+		}
+		
+		setCheckers( checkerColor, numCheckers );
+	}
+	
     public void paintComponent(Graphics g)
     {
         //Call superclass's paintcomponent

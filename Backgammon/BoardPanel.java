@@ -157,6 +157,9 @@ public class BoardPanel extends JPanel
 
 	public void highlightMoves( int press, boolean[] moves, boolean flag )
 	{
+		if( press < 0 || press > 27 )
+			return;
+		
 		boolean shouldHighlightPress = false;
 		
 		for(int i = 0; i < moves.length; i++)
