@@ -13,6 +13,7 @@ public class DicePanel extends JPanel
 {
     private int dice1 = 1;
     private int dice2 = 2;
+	private Color background = Color.WHITE;
 
     public DicePanel()
     {
@@ -29,6 +30,23 @@ public class DicePanel extends JPanel
     {
         dice2 = num;
     }
+	
+	public void setDiceColor(int c)
+	{
+		if( c == 1 )
+		{
+			background = new Color(220, 220, 200);
+		}
+		else if( c == 2 )
+		{
+			background = new Color(7, 107, 151);
+		}
+		else
+		{
+			background = Color.RED;
+		}
+		repaint();
+	}
 
     //Accessors:
     public int getDiceOne()
@@ -72,14 +90,14 @@ public class DicePanel extends JPanel
         int middleY = getHeight() / 2;
 
         //Dice 1
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(background);
         g2d.fillRoundRect(x + (radius * 5/8) * 2, middleY - radius * 1/2, x, y, 10, 10);    //Ugly calculations to make things works
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Calibri", Font.BOLD, radius));
         g2d.drawString(Integer.toString(dice1), x + ((radius * 7/8) * 2) - (radius * 2/8), middleY + radius * 1/3);
 
         //Dice 2
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(background);
         g2d.fillRoundRect(x + (radius * 7/8) * 4, middleY - radius * 1/2, x, y, 10, 10);
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Calibri", Font.BOLD, radius));

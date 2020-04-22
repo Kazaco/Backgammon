@@ -166,6 +166,11 @@ public class ControlPanel extends JPanel
     {
         dicePanel.setDiceTwo(d2);
     }
+	
+	public void setDiceColor(int c)
+	{
+		dicePanel.setDiceColor(c);
+	}
 
     public void paintComponent(Graphics g)
     {

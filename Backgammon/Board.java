@@ -34,9 +34,9 @@ public class Board
 	private boolean validMovesExist;			//Keeps track of the existence of valid moves each turn
 	private boolean d1Used, d2Used, d3Used;		//Keeps track of rolls used during each turn
 	private int move1, move2, move3;			//Moves specific to player updated each turn
-	private int moveCounter;
+	private int moveCounter;					//For dealing with doubles
 	private int d1, d2, d3, d4;					//Dice variables
-	private boolean doubles, playedDoubles;
+	private boolean doubles, playedDoubles;		//For dealing with doubles
 	private boolean loadGame, doneIntro, nLoad;	//Flag times available to save/load
 	private int curPlayer;						//Current Player's turn
 
@@ -122,11 +122,13 @@ public class Board
 			doubles = false;
 			d1 = -1;			//Die values not rolled
 			d2 = -1;
-
+			controlPanel.setDiceColor( 3 );
+			
 			do{
 				//If player doesn't need to roll again, and player has clicked the button --- retrieve dice values
 				if( controlPanel.needsToRoll() == false && controlPanel.hasPressedButton() == true)
 				{
+					controlPanel.setDiceColor( curPlayer );
 					d1 = controlPanel.getDiceOne();
 					d2 = controlPanel.getDiceTwo();
 
@@ -206,10 +208,12 @@ public class Board
 		{	
 			boardPanel.resetButton();
 			
+			//Player must enter
 			if( bkBoard[ barSlot ].getCheckerNumInSlot() != 0 )
 			{
 				firstPressed = barSlot;
 			}
+			//Player must select a slot of their color
 			else
 			{
 				while( boardPanel.getButtonPressedColor() != p );
@@ -218,21 +222,26 @@ public class Board
 			
 			System.out.println("firstPressed = " + firstPressed);
 			
+			//Find validMoves and highlight them if available
 			validMoves( p, d1, d2 );
 			boardPanel.highlightMoves( firstPressed, moves, true );
 			boardPanel.resetButton();
 			
+			//Valid moves were found
 			if( validMovesExist )
 			{
 				do
 				{
+					//Player must select a slot on the board
 					while( ( secondPressed = boardPanel.getSlotPressed() ) == -1 );
 					
+					//Player would like to cancel their move
 					if( secondPressed == firstPressed )
 						break;
 				
-				} while( moves[ secondPressed ] != true );
+				} while( moves[ secondPressed ] != true ); //The slot selected must be a valid move
 				
+				//Player is canceling their move
 				if( secondPressed == firstPressed )
 				{
 					System.out.println("Move has been canceled. Try another slot.");
@@ -241,28 +250,69 @@ public class Board
 					continue;
 				}
 			}
+			//No valid moves were found
 			else
 			{
+				//Player is "closed out"
 				if( bkBoard[ barSlot ].getCheckerNumInSlot() != 0 )
 				{
 					noValidMoves( firstPressed );
-					System.out.println("No possible entry moves. Ending turn.");
+					infoPanel.changeText("No possible entry moves. Ending turn.\n");
 					boardPanel.resetButton();
 					return;
 				}
 				
+				//No valid moves exist
 				noValidMoves( firstPressed );
-				System.out.println("No valid moves exist. Resetting.");
+				infoPanel.changeText("No valid moves exist. Try another move.\n");
 				boardPanel.highlightMoves( firstPressed, moves, false );
 				boardPanel.resetButton();
 				continue;
 			}
 			
+			//Calculate dice used
 			diceUsed( p, d1, d2 );
+			
+			//Dealing with a checker hit on the way
+			if( d3Used == true && d1Used == false && d2Used == false )
+			{
+				if( ( move1 >= 0 && move1 <= 25 ) && hitMoves[ move1 ] == true )
+				{
+					hitOnTheWay( p, move1 );
+				}
+				else if( ( move2 >= 0 && move2 <= 25 ) && hitMoves[ move2 ] == true )
+				{
+					hitOnTheWay( p, move2 );
+				}
+			}
+			
 			updateBoard( p, hitMoves[ secondPressed ] );
 			boardPanel.highlightMoves( firstPressed, moves, false );
 			boardPanel.resetButton();
+			
+			// To prevent getting stuck if game is won using 1 out of 2 dice
+			if( gameOver() == true )
+				break;
 		}
+	}
+	
+	private void hitOnTheWay( int p, int slotHit )
+	{
+		//Updating bar
+		if( p == 1 )
+		{
+			bkBoard[ 26 ].addChecker( 2 );
+			boardPanel.setSlot( 26, 2, bkBoard[ 26 ].getCheckerNumInSlot() );
+		}
+		else
+		{
+			bkBoard[ 27 ].addChecker( 1 );
+			boardPanel.setSlot( 27, 1, bkBoard[ 27 ].getCheckerNumInSlot() );
+		}
+		
+		//Removing hit checker
+		bkBoard[ slotHit ].removeChecker();
+		boardPanel.setSlot( slotHit, bkBoard[ slotHit ].getCheckerTopColor(), bkBoard[ slotHit ].getCheckerNumInSlot() );
 	}
 	
 	private void updateBoard( int p, boolean hit )
@@ -398,100 +448,75 @@ public class Board
 		
 		if( canBearOff(p) && validMovesExist == false )
 		{
-			int minDice, maxDice;
+			int maxDice;
 			
-			if( d1 > d2 )
+			//Neither dice have been used yet
+			if( d1Used == false && d2Used == false )
 			{
-				minDice = d2;
+				if( d1 > d2 )
+					maxDice = d1;
+				else
+					maxDice = d2;	
+			}
+			//Only d1 has been used
+			else if( d1Used == true && d2Used == false )
+			{
+				maxDice = d2;
+			}
+			//Only d2 has been used
+			else if( d2Used == true && d1Used == false )
+			{
 				maxDice = d1;
+			}
+			//Shouldn't be reached
+			else
+				return;
+			
+			if( p == 1 )
+			{
+				//If the player has a checker of their color in any slot before the slotPressed (on the home board) and found "no validMoves" above, they cannot bear off
+				//There truly are no valid moves, return early
+				for(int i = 6; i > firstPressed; i--)
+				{
+					if( bkBoard[i].getCheckerTopColor() == 1 )
+						return;
+				}
+				
+				for(int i = maxDice; i > 0; i--)
+				{
+					//We have found the highest point checker available to move using the maxDice, return early
+					if( bkBoard[i].getCheckerTopColor() == 1 )
+					{
+						firstPressed = i;
+						//Setting move1 to be the offBoard slot
+						move1 = 0;
+						validMovesExist = true;
+						moves[ move1 ] = true;
+						return;
+					}
+				}
 			}
 			else
 			{
-				minDice = d1;
-				maxDice = d2;
-			}
-
-			if( p == 1 )
-			{
-				for(int i = 6; i >= maxDice; i--)
-				{
-					if( bkBoard[i].getCheckerTopColor() == 1 )
-						return;
-				}
-				
-				for(int i = 6; i >= minDice; i--)
-				{
-					if( bkBoard[i].getCheckerTopColor() == 1 )
-						return;
-				}
-				
-				if( d1Used == false )
-				{
-					for(int i = maxDice; i > 0; i--)
-					{
-						if( bkBoard[i].getCheckerTopColor() == 1 )
-						{
-							firstPressed = i;
-							move1 = 0;
-							validMovesExist = true;
-							moves[ move1 ] = true;
-							return;
-						}
-					}
-				}
-				if( d2Used == false )
-				{
-					for(int i = minDice; i > 0; i--)
-					{
-						if( bkBoard[i].getCheckerTopColor() == 1 )
-						{
-							firstPressed = i;
-							move2 = 0;
-							validMovesExist = true;
-							moves[ move2 ] = true;
-						}
-					}
-				}
-			}
-			if( p == 2 )
-			{
-				for(int i = 19; i <= 25 - maxDice; i++)
+				//If the player has a checker of their color in any slot before the slotPressed (on the home board) and found "no validMoves" above, they cannot bear off
+				//There truly are no valid moves, return early
+				for(int i = 19; i < firstPressed; i++)
 				{
 					if( bkBoard[i].getCheckerTopColor() == 2 )
 						return;
 				}
 				
-				for(int i = 19; i <= 25 - minDice; i++)
+				for(int i = 25 - maxDice; i < 25; i++)
 				{
+					//We have found the highest point checker available to move using the maxDice, return early
 					if( bkBoard[i].getCheckerTopColor() == 2 )
+					{
+						firstPressed = i;
+						//Setting move1 to be the offBoard slot
+						move1 = 25;
+						validMovesExist = true;
+						moves[ move1 ] = true;
 						return;
-				}		
-				
-				if( d1Used == false )
-				{
-					for(int i = 25 - maxDice; i < 25; i++)
-					{
-						if( bkBoard[i].getCheckerTopColor() == 2 )
-						{
-							firstPressed = i;
-							move1 = 25;
-							validMovesExist = true;
-							moves[ move1 ] = true;
-							return;
-						}
-					}
-				}
-				if( d2Used == false )
-				{
-					for(int i = 25 - minDice; i < 25; i++)
-					{
-						if( bkBoard[i].getCheckerTopColor() == 2 )
-						{
-							firstPressed = i;
-							move2 = 25;
-							validMovesExist = true;
-							moves[ move2 ] = true;
-						}
 					}
 				}
 			}
