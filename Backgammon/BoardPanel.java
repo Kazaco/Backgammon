@@ -197,7 +197,6 @@ public class BoardPanel extends JPanel
     //Accessors: for button presses
     public int getSlotPressed()
     {
-        // System.out.println(rSlotPressed);
         return rSlotPressed;
     }
 
@@ -255,7 +254,6 @@ public class BoardPanel extends JPanel
                     rSlotPressed = i;
                     rButtonPressedColor = buttons[i].getCheckerColor();
                     rButtonPressedNumCheckers = buttons[i].getNumCheckers();
-                    // System.out.println("Slot:" + rSlotPressed + "\nColor:" + rButtonPressedColor + "\nNum Checkers:" + rButtonPressedNumCheckers + "\n\n");
                 }
             }
         }
