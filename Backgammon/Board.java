@@ -230,19 +230,11 @@ public class Board
 			//Valid moves were found
 			if( validMovesExist )
 			{
-				do
-				{
-					//Player must select a slot on the board
-					while( ( secondPressed = boardPanel.getSlotPressed() ) == -1 );
-					
-					//Player would like to cancel their move
-					if( secondPressed == firstPressed )
-						break;
-				
-				} while( moves[ secondPressed ] != true ); //The slot selected must be a valid move
+				//Player must select a slot on the board
+				while( ( secondPressed = boardPanel.getSlotPressed() ) == -1 );
 				
 				//Player is canceling their move
-				if( secondPressed == firstPressed )
+				if( moves[ secondPressed ] != true )
 				{
 					System.out.println("Move has been canceled. Try another slot.");
 					boardPanel.highlightMoves( firstPressed, moves, false );
@@ -492,10 +484,17 @@ public class Board
 					if( bkBoard[i].getCheckerTopColor() == 1 )
 					{
 						firstPressed = i;
-						//Setting move1 to be the offBoard slot
-						move1 = 0;
+						//Setting move1 or move2 to be the offBoard slot, depending on which dice is used
+						if( maxDice == d1 )
+						{
+							move1 = 0;
+						}
+						else
+						{
+							move2 = 0;
+						}
 						validMovesExist = true;
-						moves[ move1 ] = true;
+						moves[ 0 ] = true;
 						return;
 					}
 				}
@@ -517,9 +516,16 @@ public class Board
 					{
 						firstPressed = i;
 						//Setting move1 to be the offBoard slot
-						move1 = 25;
+						if( maxDice == d1 )
+						{
+							move1 = 25;
+						}
+						else
+						{
+							move2 = 25;
+						}
 						validMovesExist = true;
-						moves[ move1 ] = true;
+						moves[ 25 ] = true;
 						return;
 					}
 				}
