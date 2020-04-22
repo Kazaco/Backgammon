@@ -312,6 +312,8 @@ public class Board
 		
 		//Removing hit checker
 		bkBoard[ slotHit ].removeChecker();
+		//Give feedback that slot was hit
+		noValidMoves( slotHit );
 		boardPanel.setSlot( slotHit, bkBoard[ slotHit ].getCheckerTopColor(), bkBoard[ slotHit ].getCheckerNumInSlot() );
 	}
 	
@@ -337,6 +339,8 @@ public class Board
 			
 			//Removing hit checker
 			bkBoard[ secondPressed ].removeChecker();
+			//Give feedback that slot was hit
+			noValidMoves( secondPressed );
 		}
 		
 		//Updating the second slot
