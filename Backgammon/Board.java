@@ -206,6 +206,10 @@ public class Board
 		//Players turn continues until they've used up each dice roll
 		while( d3Used == false )
 		{	
+			// To prevent getting stuck if game is won using 1 out of 2 dice or on a doubles turn
+			if( gameOver() == true )
+				break;
+			
 			boardPanel.resetButton();
 			
 			//Player must enter
@@ -281,10 +285,6 @@ public class Board
 			updateBoard( p, hitMoves[ secondPressed ] );
 			boardPanel.highlightMoves( firstPressed, moves, false );
 			boardPanel.resetButton();
-			
-			// To prevent getting stuck if game is won using 1 out of 2 dice
-			if( gameOver() == true )
-				break;
 		}
 	}
 	
