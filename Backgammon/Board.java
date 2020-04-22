@@ -1,9 +1,9 @@
+//Board Frame
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import java.util.Random;
 import java.util.Scanner;
 
 //Menu Event Handling

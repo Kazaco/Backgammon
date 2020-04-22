@@ -6,7 +6,6 @@ public class Checker
     //Create a checker location
     public Checker()
     {
-        // System.out.println("New Checker!");
         color = 0;
     }
 
