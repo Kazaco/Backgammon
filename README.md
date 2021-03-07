@@ -9,10 +9,11 @@
 | John Washer | Checker Logic on Board, Checker Highlighting, and Checker Drawing |
 
 ## How to Play:  
-1. Roll the Dice to determine if player 1 (white) or player 2 (blue) goes first. (Bottom right, dice1 = player1 and dice2 = player2)  
-2. This initial dice roll will be used for the first turn depending on who rolled the higher value. Click a checker on the board to move it. The allowed moves will be highlighted in red, and the checker chosen will be highlighted in green. To de-select a checker, click the tile again.
-3. Once you have completed your move, it is the opposing player's turn, so they must roll the dice and move their checkers as well.  
-4. Have Fun! If you want more information about the game, you can open up a rulesheet ingame by pressing the "Rules" button located on the bottom panel.  
+1. Run "hwx.jar"
+2. Roll the Dice to determine if player 1 (white) or player 2 (blue) goes first. (Bottom right, dice1 = player1 and dice2 = player2)  
+3. This initial dice roll will be used for the first turn depending on who rolled the higher value. Click a checker on the board to move it. The allowed moves will be highlighted in red, and the checker chosen will be highlighted in green. To de-select a checker, click the tile again.
+4. Once you have completed your move, it is the opposing player's turn, so they must roll the dice and move their checkers as well.  
+5. Have Fun! If you want more information about the game, you can open up a rulesheet ingame by pressing the "Rules" button located on the bottom panel.  
 
 ## Extra Features:  
 1. Save/Load Game Feature:  
